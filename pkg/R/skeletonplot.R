@@ -7,6 +7,9 @@ skeletonplot <- function(x, skel.width=100, skel.height=200,
                            shoulder=1, head=1, elbow=2, wrist=3,
                            knee=4, ankle=5, chest='purple1', pelvis=6),
                          mtext=TRUE, skel.lwd=1, ...) {
+
+  if ( is.data.frame(x) )
+    x <- as.matrix(x)
   
   ### Skeleton model (see human-modelling.vsd):
   model.y <- c(ankle=0, knee=7, wrist=12, hip=13, hipbase=15, pelvis=16,

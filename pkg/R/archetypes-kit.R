@@ -1,6 +1,7 @@
 
+
 archetypes <- function(data, p, max.iterations=100, min.improvement=.Machine$double.eps,
-                       min.kappa=1000, verbose=TRUE, save.history=TRUE,
+                       max.kappa=1000, verbose=TRUE, save.history=TRUE,
                        normfn=norm2.normfn,
                        scalefn=std.scalefn,
                        rescalefn=std.rescalefn,
@@ -52,8 +53,9 @@ archetypes <- function(data, p, max.iterations=100, min.improvement=.Machine$dou
   zs <- x %*% betas
   rss <- normfn(zs %*% alphas - x) / n
 
-  kappas <- c(x=kappa(x), alphas=kappa(alphas),
-              betas=kappa(betas), zas=NA, zs=kappa(zs)) 
+  kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
+              zas=-Inf, zs=kappa(zs))
+  ill <- c(kappas) > max.kappa
   
   if ( save.history ) {
     history <- new.env(parent=emptyenv())
@@ -91,16 +93,15 @@ archetypes <- function(data, p, max.iterations=100, min.improvement=.Machine$dou
     
     imp <- rss - rss2
     rss <- rss2
+
+    kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
+                zas=kappa(zas), zs=kappa(zs))
+    ill <- ill & (kappas > max.kappa)
     
 
     ## Loop Zeugs:
     if ( verbose )
       cat(i, ': rss = ', rss, ', improvement = ', imp, '\n', sep = '')
-    
-    if ( any(kappas > min.kappa, na.rm=TRUE) )
-      warning('p=', p, ', i=', i, ': ',
-              paste(names(which(kappas > min.kappa)), collapse=', '),
-              ' > min.kappa', sep='')
     
     if ( save.history )
       snapshot(history, paste('s', i, sep=''),
@@ -109,6 +110,12 @@ archetypes <- function(data, p, max.iterations=100, min.improvement=.Machine$dou
     
     i <- i + 1
   }
+
+
+  ### Check illness:
+  if ( any(ill) )
+    warning('p=', p, ': ', paste(names(ill)[ill], collapse=', '),
+            ' > max.kappa', sep='')
 
   
   ### Rescale archetypes:
@@ -132,8 +139,7 @@ print.archetypes <- function(x, full=TRUE, ...) {
   }
   
   cat('Convergence after', x$iters, 'iterations\n')
-  cat('with RSS = ', rss(x), ' (history ',
-      ifelse(is.null(x$history), 'not ', ''), 'available).\n', sep='')
+  cat('with RSS = ', rss(x), '.\n', sep='')
 }
 
 
@@ -191,6 +197,7 @@ ahistory.archetypes <- function(zs, step) {
   
   return(zs$history[[s]][[1]])
 }
+
 
 nhistory <- function(zs, ...) {
   UseMethod('nhistory')
