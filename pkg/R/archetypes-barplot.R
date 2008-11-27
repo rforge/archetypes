@@ -1,4 +1,16 @@
 
+
+#' Barplot of archetypes.
+#' @param height An \code{\link{archetypes}} object.
+#' @param data The original data matrix.
+#' @param beside Portray the archetypes as stacked bars or as juxtaposed
+#'   bars.
+#' @param percentage Show real values or percentages according to the
+#'    original data.
+#' @param ... Passed to the underlying \code{\link{barplot}} call.
+#' @return Undefined.
+#' @method barplot archetypes
+#' @export
 barplot.archetypes <- function(height, data, beside=TRUE, percentage=FALSE, ...) {
   atypes <- atypes(height)
 

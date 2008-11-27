@@ -1,11 +1,35 @@
-### body-example: human modelling, skeleton approach
 
+
+#' Skeleton plot.
+#'
+#' Displays a schematic representation of skeleton data as available
+#' in dataset \code{skel}.
+#'
+#' @param x Matrix or data.frame of skeleton data.
+#' @param skel.width Reference width for instance calculation.
+#' @param skel.height Reference height for instance calculation.
+#' @param base.radius Base radius for points.
+#' @param xlab The x label of the plot.
+#' @param ylab The y label of the plot.
+#' @param xlim Numeric of length 2 giving the x limits for the plot.
+#' @param ylim Numeric of length 2 giving the y limits for the plot.
+#' @param col Color of the different parts of the skeleton.
+#' @param mtext Label archetypes.
+#' @param skel.lwd Line width of skeleton.
+#' @param ... Passed to underlying canvas plot function.
+#' @return List of skeleton instances.
+#' @export
+#' @usage
+#' skeletonplot(x, skel.width=100, skel.height=200, base.radius=2, xlab='',
+#'    ylab='Height (cm)', xlim=(nrow(x) * c(0, skel.width)), ylim=c(0,
+#'    skel.height), col=c(hipbase = 1, hip = 1, shoulderbase = 1,
+#'    shoulder = 1, head = 1, elbow=2, wrist=3, knee=4, ankle=5,
+#'    chest='purple1', pelvis=6), mtext=TRUE, skel.lwd=1, ...)
 skeletonplot <- function(x, skel.width=100, skel.height=200,
                          base.radius=2, xlab='', ylab='Height (cm)',
                          xlim=(nrow(x)*c(0,skel.width)), ylim=c(0,skel.height),
-                         col=c(hipbase=1, hip=1, shoulderbase=1,
-                           shoulder=1, head=1, elbow=2, wrist=3,
-                           knee=4, ankle=5, chest='purple1', pelvis=6),
+                         col=c(hipbase=1, hip=1, shoulderbase=1, shoulder=1, head=1,
+                           elbow=2, wrist=3, knee=4, ankle=5, chest='purple1', pelvis=6),
                          mtext=TRUE, skel.lwd=1, ...) {
 
   if ( is.data.frame(x) )
@@ -111,6 +135,12 @@ skeletonplot <- function(x, skel.width=100, skel.height=200,
 
 
 
+#' Annotated skeleton plot.
+#'
+#' Displays a generic skeleton with annotations explaining the
+#' measurements.
+#'
+#' @export
 jd <- function() {
   jd <- rbind(c(AnkleDiam=13.9, KneeDiam=18.8, WristDiam=10.5, Bitro=32.0,
                 Biil=27.8, ElbowDiam=13.4, ChestDiam=28.0, ChestDp=15,

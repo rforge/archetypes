@@ -1,4 +1,14 @@
 
+
+#' Archetypes plot movie.
+#' @param zs An \code{\link{archetypes}} object.
+#' @param data The data matrix.
+#' @param show Show archetypes or approximated data.
+#' @param ssleep Seconds to sleep before start.
+#' @param bsleep Seconds to sleep between each plot.
+#' @param ... Passed to underlying plot functions.
+#' @return Undefined.
+#' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata'),
                       ssleep=0, bsleep=0, ...) {
   
@@ -21,6 +31,15 @@ movieplot <- function(zs, data, show=c('atypes', 'adata'),
 
 
 
+#' Archetypes parallel coordinates plot movie.
+#' @param zs An \code{\link{archetypes}} object.
+#' @param data The data matrix.
+#' @param show Show archetypes or approximated data.
+#' @param ssleep Seconds to sleep before start.
+#' @param bsleep Seconds to sleep between each plot.
+#' @param ... Passed to underlying pcplot functions.
+#' @return Undefined.
+#' @export
 moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
                         ssleep=0, bsleep=0, ...) {
 

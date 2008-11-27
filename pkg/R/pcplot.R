@@ -1,9 +1,30 @@
 
+
+#' Generic function for parallel coordinates plot.
+#' @param x An object.
+#' @param ... Further arguments.
+#' @export
 pcplot <- function(x, ...) {
   UseMethod('pcplot')
 }
 
 
+#' Default parallel coordinates plot.
+#'
+#' Code copied from function \code{\link[MASS]{parcoord}} of package
+#' \code{MASS} because I need a generic function and I changed
+#' some minor things.
+#'
+#' @param x A $n \times m$ matrix or data frame who columns represent
+#'   variables. Missing values are allowed.
+#' @param col Line color.
+#' @param lty Line type.
+#' @param var.label Axes labels.
+#' @param rx A $2 \times m$ matrix with ranges for each dimension.
+#' @param ... Passed to the underlying \code{\link{matplot}} function.
+#' @return Undefined.
+#' @method pcplot default
+#' @export
 pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
                             rx=NULL, ...) {
 
@@ -37,6 +58,15 @@ pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
 }
 
 
+
+#' Add lines to an existing parallel coordinates plot.
+#' @param x A matrix or data frame containing the additional data.
+#' @param data The data of the existing parallel coordinates plot.
+#' @param col Line colors.
+#' @param lty Line types.
+#' @param ... Passed to underlying \code{\link{matlines}}.
+#' @return Undefined.
+#' @export
 lines.pcplot <- function(x, data, col=1, lty=1, ...) {
   rx <- apply(data, 2, range, na.rm=TRUE)
 
