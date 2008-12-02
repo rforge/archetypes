@@ -5,6 +5,8 @@
 \description{
 Skeletal diameter measurements, as well as height and gender, are
 given for 507 physically active individuals - 247 men and 260 women.
+
+This is a subset of the \code{\link{body}} data set.
 }
 \usage{skel}
 \format{A data.frame containing 507 observations of 11 variables.}

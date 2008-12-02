@@ -44,6 +44,7 @@ ahull <- function(zs) {
 #'   idea and Matlab source code of Bernard Pailthorpe.
 #' @method plot archetypes
 #' @export
+#' @noRd
 plot.archetypes <- function(x, y,
                             data.col=gray(0.7), data.pch=19,
                             atypes.col=2, atypes.pch=19,
@@ -91,6 +92,7 @@ plot.archetypes <- function(x, y,
 #' @return Undefined.
 #' @method plot stepArchetypes
 #' @export
+#' @noRd
 plot.stepArchetypes <- function(x, y,
                                 data.col=gray(0.7), data.pch=19,
                                 atypes.col=(seq_len(length(x) * length(x[[1]]))+1),

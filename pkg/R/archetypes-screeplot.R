@@ -10,7 +10,6 @@
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
 #' @method screeplot stepArchetypes
-#' @export
 screeplot.stepArchetypes <- function(x, type=c('lines', 'barplot'), ...) {
   zs <- bestModel(x)
 

@@ -5,7 +5,6 @@
 \description{
 A simple artificial two-dimensional data set.
 }
-\usage{skel}
+\usage{toy}
 \format{A data.frame containing 250 observations of 2 variables.}
-\seealso{toy}
 \keyword{datasets}

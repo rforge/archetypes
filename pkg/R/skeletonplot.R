@@ -3,7 +3,7 @@
 #' Skeleton plot.
 #'
 #' Displays a schematic representation of skeleton data as available
-#' in dataset \code{skel}.
+#' in dataset \code{\link{skel}}.
 #'
 #' @param x Matrix or data.frame of skeleton data.
 #' @param skel.width Reference width for instance calculation.
@@ -25,6 +25,7 @@
 #'    skel.height), col=c(hipbase = 1, hip = 1, shoulderbase = 1,
 #'    shoulder = 1, head = 1, elbow=2, wrist=3, knee=4, ankle=5,
 #'    chest='purple1', pelvis=6), mtext=TRUE, skel.lwd=1, ...)
+#' @seealso \code{\link{skel}}, \code{\link{jd}}
 skeletonplot <- function(x, skel.width=100, skel.height=200,
                          base.radius=2, xlab='', ylab='Height (cm)',
                          xlim=(nrow(x)*c(0,skel.width)), ylim=c(0,skel.height),
@@ -138,8 +139,9 @@ skeletonplot <- function(x, skel.width=100, skel.height=200,
 #' Annotated skeleton plot.
 #'
 #' Displays a generic skeleton with annotations explaining the
-#' measurements.
+#' measurements available in data set \code{\link{skel}}.
 #'
+#' @seealso \code{\link{skeletonplot}}, \code{\link{skel}}
 #' @export
 jd <- function() {
   jd <- rbind(c(AnkleDiam=13.9, KneeDiam=18.8, WristDiam=10.5, Bitro=32.0,

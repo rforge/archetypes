@@ -5,7 +5,6 @@
 #' Scaling block: standardize to mean 0 and standard deviation 1.
 #' @param x Data matrix.
 #' @return Standardized data matrix with some attribues.
-#' @export
 std.scalefn <- function(x) {
   m = rowMeans(x)
   x = x - m
@@ -22,7 +21,6 @@ std.scalefn <- function(x) {
 #' @param x Standardized data matrix.
 #' @param zs Archetypes matrix
 #' @return Rescaled archetypes.
-#' @export
 std.rescalefn <- function(x, zs) {
 
   m = attr(x, '.Meta')$mean
@@ -39,7 +37,6 @@ std.rescalefn <- function(x, zs) {
 #' Scaling block: no scaling.
 #' @param x Data matrix.
 #' @return Data matrix.
-#' @export
 no.scalefn <- function(x) {
   return(x)
 }
@@ -48,7 +45,6 @@ no.scalefn <- function(x) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
-#' @export
 no.rescalefn <- function(x, zs) {
   return(zs)
 }
@@ -81,7 +77,6 @@ make.dummyfn <- function(huge=200) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
-#' @export
 rm.undummyfn <- function(x, zs) {
   dr = attr(x, '.Meta')$dummyrow
   
@@ -100,7 +95,6 @@ no.dummyfn <- function(x) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
-#' @export
 no.undummyfn <- function(x, zs) {
   return(zs)
 }
@@ -113,7 +107,6 @@ no.undummyfn <- function(x, zs) {
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
-#' @export
 formal.zalphasfn <- function(alphas, x) {
   return(t(solve(alphas %*% t(alphas)) %*% alphas %*% t(x)))
 }
@@ -124,7 +117,6 @@ formal.zalphasfn <- function(alphas, x) {
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
-#' @export
 ginv.zalphasfn <- function(alphas, x) {
   require(MASS)
   
@@ -137,7 +129,6 @@ ginv.zalphasfn <- function(alphas, x) {
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
-#' @export
 opt.zalphasfn <- function(alphas, x) {
   z <- rnorm(nrow(x)*nrow(alphas))
                
@@ -161,7 +152,6 @@ opt.zalphasfn <- function(alphas, x) {
 #' @param C The archetypes matrix.
 #' @param d The data matrix.
 #' @return Recalculated alpha.
-#' @export
 nnls.alphasfn <- function(coefs, C, d) {
   require(nnls)
   
@@ -178,7 +168,6 @@ nnls.alphasfn <- function(coefs, C, d) {
 #' @param C The archetypes matrix.
 #' @param d The data matrix.
 #' @return Recalculated alpha.
-#' @export
 snnls.alphasfn <- function(coefs, C, d) {
   require(nnls)
 
@@ -207,7 +196,6 @@ snnls.alphasfn <- function(coefs, C, d) {
 #' @param C The data matrix.
 #' @param d The archetypes matrix.
 #' @return Recalculated beta.
-#' @export
 nnls.betasfn <- nnls.alphasfn
 
 
@@ -217,7 +205,6 @@ nnls.betasfn <- nnls.alphasfn
 #' @param C The data matrix.
 #' @param d The archetypes matrix.
 #' @return Recalculated beta.
-#' @export
 snnls.betasfn <- snnls.alphasfn
 
 
@@ -228,7 +215,6 @@ snnls.betasfn <- snnls.alphasfn
 #' Norm block: standard matrix norm (spectral norm).
 #' @param m Matrix.
 #' @return The norm.
-#' @export
 norm2.normfn <- function(m) {
   return(max(svd(m)$d))
 }
@@ -237,7 +223,6 @@ norm2.normfn <- function(m) {
 #' Norm block: euclidian norm.
 #' @param m Matrix.
 #' @return The norm.
-#' @export
 euc.normfn <- function(m) {
   return(sum(apply(m, 2, function(x){sqrt(sum(x^2))})))
 }
@@ -249,7 +234,6 @@ euc.normfn <- function(m) {
 #' Init block: generator for random initializtion.
 #' @param k The proportion of beta for each archetype.
 #' @return A function which returns a list with alpha and beta.
-#' @export
 make.random.initfn <- function(k) {
 
   bp.initfn <- function(x, p) {
@@ -271,7 +255,6 @@ make.random.initfn <- function(k) {
 #' Init block: generator for fix initializtion.
 #' @param indizes The indizies of data points to use as archetypes.
 #' @return A function which returns a list with alpha and beta.
-#' @export
 make.fix.initfn <- function(indizes) {
 
   fix.initfn <- function(x, p) {
@@ -286,4 +269,30 @@ make.fix.initfn <- function(indizes) {
   }
 
   return(fix.initfn)
+}
+
+
+
+### Archetypes family:
+
+#' Archetypes family constructor.
+#'
+#' This function returns a problem solving brick for each of the different
+#' conceptual parts of the algorithm. Currently, only the 'original' family
+#' is supported.
+#'
+#' @param which The kind of archetypes family; currently ignored.
+#' @return A list containing a function for each of the different parts.
+#' @seealso \code{\link{archetypes}}
+#' @export
+archetypesFamily <- function(which='original') {
+  return(list(normfn=norm2.normfn,
+              scalefn=std.scalefn,
+              rescalefn=std.rescalefn,
+              dummyfn=make.dummyfn(200),
+              undummyfn=rm.undummyfn,
+              initfn=make.random.initfn(1),
+              alphasfn=nnls.alphasfn,
+              zalphasfn=ginv.zalphasfn,
+              betasfn=nnls.betasfn))
 }

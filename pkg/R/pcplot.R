@@ -4,6 +4,7 @@
 #' @param x An object.
 #' @param ... Further arguments.
 #' @export
+#' @noRd
 pcplot <- function(x, ...) {
   UseMethod('pcplot')
 }
@@ -12,8 +13,10 @@ pcplot <- function(x, ...) {
 #' Default parallel coordinates plot.
 #'
 #' Code copied from function \code{\link[MASS]{parcoord}} of package
-#' \code{MASS} because I need a generic function and I changed
-#' some minor things.
+#' \code{MASS} to simply play arround with the visualization of archetypes.
+#' At a later date, when it is clear which visualisation is the best, the
+#' functionality is probabibly merged with the original function or it is
+#' possible with parallel coordinate plots which are available et all.
 #'
 #' @param x A $n \times m$ matrix or data frame who columns represent
 #'   variables. Missing values are allowed.
@@ -21,10 +24,10 @@ pcplot <- function(x, ...) {
 #' @param lty Line type.
 #' @param var.label Axes labels.
 #' @param rx A $2 \times m$ matrix with ranges for each dimension.
-#' @param ... Passed to the underlying \code{\link{matplot}} function.
+#' @param ... Passed to the underlying \code{\link[graphics]{matplot}}
+#'   function.
 #' @return Undefined.
 #' @method pcplot default
-#' @export
 pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
                             rx=NULL, ...) {
 
@@ -64,9 +67,8 @@ pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
 #' @param data The data of the existing parallel coordinates plot.
 #' @param col Line colors.
 #' @param lty Line types.
-#' @param ... Passed to underlying \code{\link{matlines}}.
+#' @param ... Passed to underlying \code{\link[graphics]{matlines}}.
 #' @return Undefined.
-#' @export
 lines.pcplot <- function(x, data, col=1, lty=1, ...) {
   rx <- apply(data, 2, range, na.rm=TRUE)
 

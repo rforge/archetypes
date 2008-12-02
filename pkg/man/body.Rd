@@ -9,6 +9,7 @@ individuals - 247 men and 260 women.
 }
 \usage{body}
 \format{A data.frame containing 507 observations of 25 variables.}
+\seealso{skel}
 \references{
 Heinz, Peterson, Johnson and Kerk. "Exploring relationships in body 
 dimensions". Journal of Statistics Education, 11(2). 

@@ -14,57 +14,51 @@ roxygen()
 #' @param verbose Print some details during execution.
 #' @param saveHistory Save each execution step in an environment for
 #'   further analyses.
-#' @param normfn 
-#' @param scalefn Data scaling block.
-#' @param rescalefn Archetypes rescaling block.
-#' @param dummyfn Add dummy row block.
-#' @param undummyfn Remove dummy row block.
-#' @param initfn Alpha and beta initialization block.
-#' @param alphasfn Calculate alpha block.
-#' @param zalphasfn Calculate archetypes block.
-#' @param betasfn Calculate beta block.
-#' @return An object of class \code{archetypes}, see
-#'   \code{\link{archetypes-class}}.
-#' @seealso \link{stepArchetypes}
+#' @param family Blocks defining the underlying problem solving mechanisms;
+#'   see \code{\link{archetypesFamily}}.
+#' @return An object of class \code{\link{archetypes}}, see
+#'   \code{\link{as.archetypes}}.
+#' @seealso \code{\link{stepArchetypes}}
 #' @references Cutler and Breiman. Archetypal Analysis. Technometrics,
 #'   36(4), 1994. 338-348.
-#' @example
+#' @examples
 #'   data(toy)
 #'   a <- archetypes(toy, 3)
 #' @export
+#' @note Please see the vignette for a detailed explanation!
 archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$double.eps,
-                       maxKappa=1000, verbose=TRUE, saveHistory=TRUE, normfn=norm2.normfn,
-                       scalefn=std.scalefn, rescalefn=std.rescalefn, dummyfn=make.dummyfn(200),
-                       undummyfn=rm.undummyfn, initfn=make.random.initfn(1),
-                       alphasfn=nnls.alphasfn, zalphasfn=ginv.zalphasfn,
-                       betasfn=nnls.betasfn) {
+                       maxKappa=1000, verbose=TRUE, saveHistory=TRUE,
+                       family=archetypesFamily('original')) {
   
   ### Helpers:
   mycall <- match.call()
   
   history <- NULL
-  snapshot <- function(history, name, ...) {
-    history[[paste('s', name, sep='')]] <- list(...)
+  snapshot <- function(name) {
+    history[[paste('s', name, sep='')]] <-
+      list(archetypes=as.archetypes(t(family$rescalefn(x,
+             family$undummyfn(x, zs))), alphas=t(alphas),
+             rss=rss, kappas=kappas))
   }
 
 
   ### Data preparation:
   x <- t(data)
-  x <- scalefn(x)
-  x <- dummyfn(x)
+  x <- family$scalefn(x)
+  x <- family$dummyfn(x)
 
   n <- ncol(x)
   m <- nrow(x)
 
 
   ### Initialization:
-  init <- initfn(x, k)
+  init <- family$initfn(x, k)
   
   betas <- init$betas
   alphas <- init$alphas
 
   zs <- x %*% betas
-  rss <- normfn(zs %*% alphas - x) / n
+  rss <- family$normfn(zs %*% alphas - x) / n
 
   kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
               zas=-Inf, zs=kappa(zs))
@@ -72,9 +66,7 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
   
   if ( saveHistory ) {
     history <- new.env(parent=emptyenv())
-    snapshot(history, 0,
-             archetypes=as.archetypes(t(rescalefn(x, undummyfn(x, zs))),
-               alphas=t(alphas), rss=rss, kappas=kappas))
+    snapshot(0)
   }
 
   
@@ -85,22 +77,22 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
   while ( (i <= maxIterations) & (imp >= minImprovement) ) {
     
     ## Alpha's:
-    alphas <- alphasfn(alphas, zs, x)
-    zas <- zalphasfn(alphas, x)
-    rss1 <- normfn(zas %*% alphas - x) / n
+    alphas <- family$alphasfn(alphas, zs, x)
+    zas <- family$zalphasfn(alphas, x)
+    rss1 <- family$normfn(zas %*% alphas - x) / n
 
     kappas[c('alphas', 'zas')] <- c(kappa(alphas), kappa(zas))
 
     
     ## Beta's:
-    betas <- betasfn(betas, x, zas)
+    betas <- family$betasfn(betas, x, zas)
     zs <- x %*% betas
 
     kappas[c('betas', 'zs')] <- c(kappa(betas), kappa(zs))
 
     
     ## RSS and improvement:
-    rss2 <- normfn(zs %*% alphas - x) / n
+    rss2 <- family$normfn(zs %*% alphas - x) / n
     
     imp <- rss - rss2
     rss <- rss2
@@ -115,9 +107,7 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
       cat(i, ': rss = ', rss, ', improvement = ', imp, '\n', sep = '')
     
     if ( saveHistory )
-      snapshot(history, i,
-               archetypes=as.archetypes(t(rescalefn(x, undummyfn(x, zs))),
-                 alphas=t(alphas), rss=rss, kappas=kappas))
+      snapshot(i)
     
     i <- i + 1
   }
@@ -130,8 +120,8 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
 
   
   ### Rescale archetypes:
-  zs <- undummyfn(x, zs)
-  zs <- rescalefn(x, zs)
+  zs <- family$undummyfn(x, zs)
+  zs <- family$rescalefn(x, zs)
   zs <- t(zs)
 
   

@@ -11,7 +11,24 @@
 #'   \code{stepArchetypes}. Each element is a list of class
 #'   \code{repArchetypes} with \code{nrep} elements; only for internal
 #'   usage.
+#' @seealso \code{\link{atypes}}, \code{\link{ntypes}},
+#'   \code{\link{rss}}, \code{\link{adata}}, \code{\link{alphas}},
+#'   \code{\link{ahistory}}, \code{\link{nhistory}}
 #' @export
+#' @examples
+#'   \dontrun{
+#'   data(skel)
+#'   skel2 <- subset(skel, select=-Gender)
+#'   as <- stepArchetypes(skel2, k=1:5, verbose=FALSE)
+#'
+#'   ## Residual sum of squares curve:
+#'   screeplot(as)
+#'
+#'   ## Select three archetypes and from that the best
+#'   ## recurrence:
+#'   a3 <- bestModel(as[[3]])
+#'   }
+#' @note Please see the vignette for a detailed explanation!
 stepArchetypes <- function(..., k, nrep=3, verbose=TRUE) {
 
   mycall <- match.call()
@@ -126,9 +143,10 @@ rss.stepArchetypes <- function(zs, ...) {
 
 
 
-#' Generic best model getter.
-#' @param zs An object.
+#' Best model getter.
+#' @param zs An \code{\link{stepArchetypes}} object.
 #' @param ... Further arguments.
+#' @return A list of length $k$ of best models.
 #' @export
 bestModel <- function(zs, ...) {
   UseMethod('bestModel')
