@@ -1,3 +1,5 @@
+#' @include pcplot.R
+{}
 
 
 #' Parallel coordinates of data and archetypes.

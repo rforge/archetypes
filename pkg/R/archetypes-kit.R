@@ -1,6 +1,6 @@
 #' @include archetypes-kit-blocks.R
 #' @include archetypes-class.R
-roxygen()
+{}
 
 
 
@@ -26,9 +26,10 @@ roxygen()
 #'   a <- archetypes(toy, 3)
 #' @export
 #' @note Please see the vignette for a detailed explanation!
-archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$double.eps,
+archetypes <- function(data, k, maxIterations=100,
+                       minImprovement=sqrt(.Machine$double.eps),
                        maxKappa=1000, verbose=TRUE, saveHistory=TRUE,
-                       family=archetypesFamily('original')) {
+                       family=archetypesFamily('default')) {
   
   ### Helpers:
   mycall <- match.call()
@@ -37,7 +38,7 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
   snapshot <- function(name) {
     history[[paste('s', name, sep='')]] <-
       list(archetypes=as.archetypes(t(family$rescalefn(x,
-             family$undummyfn(x, zs))), alphas=t(alphas),
+             family$undummyfn(x, zs))), k, alphas=t(alphas),
              rss=rss, kappas=kappas))
   }
 
@@ -62,7 +63,8 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
 
   kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
               zas=-Inf, zs=kappa(zs))
-  ill <- c(kappas) > maxKappa
+  isIll <- c(kappas) > maxKappa
+  errormsg <- NULL
   
   if ( saveHistory ) {
     history <- new.env(parent=emptyenv())
@@ -73,8 +75,8 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
   ### Main loop:
   i <- 1
   imp <- +Inf
-  
-  while ( (i <= maxIterations) & (imp >= minImprovement) ) {
+
+  tryCatch(while ( (i <= maxIterations) & (imp >= minImprovement) ) {
     
     ## Alpha's:
     alphas <- family$alphasfn(alphas, zs, x)
@@ -99,23 +101,32 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
 
     kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
                 zas=kappa(zas), zs=kappa(zs))
-    ill <- ill & (kappas > maxKappa)
+    isIll <- isIll & (kappas > maxKappa)
     
 
     ## Loop Zeugs:
     if ( verbose )
-      cat(i, ': rss = ', rss, ', improvement = ', imp, '\n', sep = '')
+      cat(i, ': rss = ', formatC(rss, 8, format='f'),
+          ', improvement = ', formatC(imp, 8, format='f'),
+          '\n', sep = '')
     
     if ( saveHistory )
       snapshot(i)
     
     i <- i + 1
-  }
-
+  },
+  error=function(e) errormsg <<- e)
+  
 
   ### Check illness:
-  if ( any(ill) )
-    warning('k=', k, ': ', paste(names(ill)[ill], collapse=', '),
+  if ( !is.null(errormsg) ) {
+    warning('k=', k, ': ', errormsg)
+    return(as.archetypes(NULL, k, NULL, NA, iters=i,
+                         call=mycall, history=history, kappas=kappas))
+  }
+
+  if ( any(isIll) )
+    warning('k=', k, ': ', paste(names(isIll)[isIll], collapse=', '),
             ' > maxKappa', sep='')
 
   
@@ -125,6 +136,6 @@ archetypes <- function(data, k, maxIterations=100, minImprovement=.Machine$doubl
   zs <- t(zs)
 
   
-  return(as.archetypes(zs, t(alphas), rss, iters=(i-1),
+  return(as.archetypes(zs, k, t(alphas), rss, iters=(i-1),
                        call=mycall, history=history, kappas=kappas))
 }

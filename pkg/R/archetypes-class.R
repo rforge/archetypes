@@ -17,10 +17,11 @@
 #'   \code{\link{rss}}, \code{\link{adata}}, \code{\link{alphas}},
 #'   \code{\link{ahistory}}, \code{\link{nhistory}}
 #' @export
-as.archetypes <- function(archetypes, alphas, rss, iters=NULL, call=NULL,
+as.archetypes <- function(archetypes, k, alphas, rss, iters=NULL, call=NULL,
                           history=NULL, kappas=NULL) {
   
   return(structure(list(archetypes=archetypes,
+                        k=k,
                         alphas=alphas,
                         rss=rss,
                         iters=iters,
@@ -41,10 +42,8 @@ as.archetypes <- function(archetypes, alphas, rss, iters=NULL, call=NULL,
 #' @S3method print archetypes
 print.archetypes <- function(x, full=TRUE, ...) {
   if ( full ) {
-    cat('Archetypes\n\n')
-    
-    args <- as.list(x$call[-1])
-    cat(paste(names(args), args, sep='=', collapse=', '), '\n\n')
+    cat('Archetypes object\n\n')
+    cat(deparse(x$call), '\n\n')
   }
   
   cat('Convergence after', x$iters, 'iterations\n')
@@ -85,7 +84,7 @@ ntypes <- function(zs, ...) {
 
 #' @S3method ntypes archetypes
 ntypes.archetypes <- function(zs, ...) {
-  return(nrow(atypes(zs)))
+  return(zs$k)
 }
 
 
@@ -153,6 +152,27 @@ alphas.archetypes <- function(zs, ...) {
 
 
 
+#' Iteration getter.
+#' @param zs An \code{archetypes}-related object.
+#' @param ... Further arguments.
+#' @return Number of iterations.
+#' @export
+iters <- function(zs, ...) {
+  UseMethod('iters')
+}
+
+#' Iteration getter.
+#' @param zs An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Number of iterations.
+#' @method iters archetypes
+#' @S3method iters archetypes
+iters.archetypes <- function(zs, ...) {
+  return(zs$iters)
+}
+
+
+
 #' Archetypes history getter.
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
@@ -203,4 +223,15 @@ nhistory.archetypes <- function(zs, ...) {
     stop('No history available')
 
   return(length(zs$history))
+}
+
+
+#' Kappa getter.
+#' @param z An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return A vector of kappas.
+#' @method kappa archetypes
+#' @S3method kappa archetypes
+kappa.archetypes <- function(z, ...) {
+  return(z$kappas)
 }

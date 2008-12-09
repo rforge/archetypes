@@ -3,7 +3,8 @@ Type: Package
 Title: Archetypal Analysis
 Version: 0.1
 Date: 2008-11-26
-Depends: MASS, nnls (>= 1.1), roxygen
+Depends: nnls (>= 1.1)
+Suggests: MASS
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Description: The main function archetypes implements a framework for

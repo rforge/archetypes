@@ -9,6 +9,7 @@
 #' @param ... Passed to the underlying \code{\link{barplot}} call.
 #' @return Undefined.
 #' @method barplot archetypes
+#' @importFrom graphics barplot
 #' @export
 barplot.archetypes <- function(height, data, beside=TRUE, percentage=FALSE, ...) {
   atypes <- atypes(height)

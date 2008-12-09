@@ -103,12 +103,12 @@ no.undummyfn <- function(x, zs) {
 
 ### `From X and alpha to archetypes` functions:
 
-#' X to alpha block: "the formal" approach.
+#' X to alpha block: QR approach.
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
-formal.zalphasfn <- function(alphas, x) {
-  return(t(solve(alphas %*% t(alphas)) %*% alphas %*% t(x)))
+qrsolve.zalphasfn <- function(alphas, x) {
+  return(t(qr.solve(alphas %*% t(alphas)) %*% alphas %*% t(x)))
 }
 
 
@@ -285,14 +285,19 @@ make.fix.initfn <- function(indizes) {
 #' @return A list containing a function for each of the different parts.
 #' @seealso \code{\link{archetypes}}
 #' @export
-archetypesFamily <- function(which='original') {
-  return(list(normfn=norm2.normfn,
+archetypesFamily <- function(which=c('default', 'ginv')) {
+  fam <- list(normfn=norm2.normfn,
               scalefn=std.scalefn,
               rescalefn=std.rescalefn,
               dummyfn=make.dummyfn(200),
               undummyfn=rm.undummyfn,
               initfn=make.random.initfn(1),
               alphasfn=nnls.alphasfn,
-              zalphasfn=ginv.zalphasfn,
-              betasfn=nnls.betasfn))
+              betasfn=nnls.betasfn)
+
+  fam$zalphasfn <- switch(which[1],
+                          'default' = qrsolve.zalphasfn,
+                          'ginv' = ginv.zalphasfn)
+
+  return(fam)
 }

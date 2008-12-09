@@ -77,11 +77,8 @@ stepArchetypes <- function(..., k, nrep=3, verbose=TRUE) {
 #' @method print stepArchetypes
 #' @S3method print stepArchetypes
 print.stepArchetypes <- function(x, ...) {
-  cat('StepArchetypes\n\n')
- 
-  thecall <- attr(x, 'call')
-  args <- as.list(thecall)[-1]
-  cat(paste(names(args), args, sep='=', collapse=', '), '\n')  
+  cat('StepArchetypes object\n\n')
+  cat(deparse(attr(x, 'call')), '\n')
 }
 
 
@@ -138,6 +135,20 @@ ntypes.stepArchetypes <- function(zs, ...) {
 rss.stepArchetypes <- function(zs, ...) {
   ret <- t(sapply(zs, rss))
   rownames(ret) <- paste('k', ntypes(zs), sep='')
+  return(ret)
+}
+
+
+#' Iteration getter.
+#' @param zs A \code{stepArchetypes} object.
+#' @param ... Ignored.
+#' @return A matrix of iterations.
+#' @method iters stepArchetypes
+#' @S3method iters stepArchetypes
+iters.stepArchetypes <- function(zs, ...) {
+  ret <- t(sapply(zs, iters))
+  rownames(ret) <- paste('k', ntypes(zs), sep='')
+
   return(ret)
 }
 
@@ -216,8 +227,23 @@ rss.repArchetypes <- function(zs, ...) {
 #' @method ntypes repArchetypes
 #' @S3method ntypes repArchetypes
 ntypes.repArchetypes <- function(zs, ...) {
-  return(nrow(atypes(zs[[1]])))
+  return(ntypes(zs[[1]]))
 }
+
+
+#' Iteration getter.
+#' @param zs A \code{stepArchetypes} object.
+#' @param ... Ignored.
+#' @return A matrix of iterations.
+#' @method iters repArchetypes
+#' @S3method iters repArchetypes
+iters.repArchetypes <- function(zs, ...) {
+  ret <- sapply(zs, iters)
+  names(ret) <- paste('r', seq_along(ret), sep='')
+  
+  return(ret)
+}
+
 
 
 #' \code{repArchetypes} best model getter.
@@ -227,5 +253,12 @@ ntypes.repArchetypes <- function(zs, ...) {
 #' @method bestModel repArchetypes
 #' @S3method bestModel repArchetypes
 bestModel.repArchetypes <- function(zs, ...) {
-  return(zs[[which.min(rss(zs))]])
+  m <- which.min(rss(zs))
+
+  if ( length(m) == 0 )
+    return(zs[[1]])
+  else
+    return(zs[[m]])
 }
+
+

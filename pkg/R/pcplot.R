@@ -28,6 +28,7 @@ pcplot <- function(x, ...) {
 #'   function.
 #' @return Undefined.
 #' @method pcplot default
+#' @S3method pcplot default
 pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
                             rx=NULL, ...) {
 
