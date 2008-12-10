@@ -9,6 +9,7 @@
 #' @param type Draw lines or a barplot.
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
+#' @importFrom stats screeplot
 #' @method screeplot stepArchetypes
 #' @S3method screeplot stepArchetypes
 screeplot.stepArchetypes <- function(x, type=c('lines', 'barplot'), ...) {

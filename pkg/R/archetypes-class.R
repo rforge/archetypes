@@ -3,6 +3,7 @@
 #' Archetypes object constructor.
 #' @param archetypes The archetypes; a $p \times m$ matrix, see
 #'   \code{\link{atypes}}.
+#' @param k The number of archetypes;
 #' @param alphas The coefficients; a $n \times p$ matrix, see
 #'   \code{\link{alphas}}.
 #' @param rss The residual sum of squares; see \link{rss}.
