@@ -10,7 +10,6 @@ Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Description: The main function archetypes implements a framework for
   archetypal analysis supporting arbitary problem solving mechanisms
   for the different conceputal parts of the algorithm.
-
   NOTE: This package is used as real-world test application for the
   Roxygen documentation system. At the moment, Roxygen does not produce
   "good" help pages for the everyday use of a package; we refer to the

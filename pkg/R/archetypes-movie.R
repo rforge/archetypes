@@ -30,6 +30,54 @@ movieplot <- function(zs, data, show=c('atypes', 'adata'),
 }
 
 
+#' Archetypes plot movie 2.
+#'
+#' Shows the intermediate steps of the algorithm;
+#'
+#' @param zs An \code{\link{archetypes}} object.
+#' @param data The data matrix.
+#' @param show Shows only archetypes currently.
+#' @param ssleep Seconds to sleep before start.
+#' @param bsleep Seconds to sleep between each plot.
+#' @param zas.col Color of the intermediate archetypes.
+#' @param zas.pch Type of the intermediate archetypes points.
+#' @param old.col Color of the archetypes on step further.
+#' @param ... Passed to underlying plot functions.
+#' @return Undefined.
+#' @export
+movieplot2 <- function(zs, data, show='atypes',
+                       ssleep=0, bsleep=0,
+                       zas.col=2, zas.pch=13,
+                       old.col=rgb(1,0.5,0.5), ...) {
+
+  steps <- length(zs$history)
+
+  Sys.sleep(ssleep)
+
+  # Initial archetypes:
+  a <- ahistory(zs, step=0)
+  plot(a, data, ...)
+  Sys.sleep(bsleep)
+
+  # Alternating loop:
+  for ( i in seq_len(steps-1) ) {
+    a0 <- ahistory(zs, step=(i-1))
+    a <- ahistory(zs, step=i)
+
+    plot(a0, data, atypes.col=old.col, ...)
+    points(a$zas, col=zas.col, pch=zas.pch, ...)
+    Sys.sleep(bsleep)
+
+    plot(a0, data, atypes.col=old.col, ...)
+    points(a$zas, col=zas.col, pch=zas.pch, ...)
+    par(new=TRUE)
+    plot(a, data, ...)
+    Sys.sleep(bsleep)
+  }
+  
+  plot(a, data, ...)
+}
+
 
 #' Archetypes parallel coordinates plot movie.
 #' @param zs An \code{\link{archetypes}} object.
