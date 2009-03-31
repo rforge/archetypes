@@ -6,13 +6,15 @@
 #' @param show Show archetypes or approximated data.
 #' @param ssleep Seconds to sleep before start.
 #' @param bsleep Seconds to sleep between each plot.
+#' @param postfn Post plot function; is called in each
+#'   iteration after the plot call.
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
 #' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata'),
-                      ssleep=0, bsleep=0, ...) {
+                      ssleep=0, bsleep=0, postfn=function(iter){}, ...) {
   
-  steps <- length(zs$history)
+  steps <- length(zs$history)  
   atypesmovie <- ifelse(show[1] == 'atypes', TRUE, FALSE)
 
   Sys.sleep(ssleep)
@@ -24,6 +26,8 @@ movieplot <- function(zs, data, show=c('atypes', 'adata'),
       plot(a, data, ...)
     else
       plot(adata(a), ...)
+
+    postfn(i)
     
     Sys.sleep(bsleep)
   }

@@ -1,10 +1,10 @@
 
 
 #' Archetypes object constructor.
-#' @param archetypes The archetypes; a $p \times m$ matrix, see
+#' @param archetypes The archetypes; a \eqn{p \times m} matrix, see
 #'   \code{\link{atypes}}.
 #' @param k The number of archetypes;
-#' @param alphas The coefficients; a $n \times p$ matrix, see
+#' @param alphas The coefficients; a \eqn{n \times p} matrix, see
 #'   \code{\link{alphas}}.
 #' @param rss The residual sum of squares; see \link{rss}.
 #' @param iters The number of iterations to the convergence.
@@ -12,7 +12,7 @@
 #' @param history If \code{saveHistory} set then an environment with the
 #'   archetypes object for each execution step;
 #' @param kappas The kappas for each system of linear equations.
-#' @param betas The data coefficients; a $p \times n$ matrix.
+#' @param betas The data coefficients; a \eqn{p \times n} matrix.
 #' @param zas The temporary archetypes.
 #' @return A list with an element for each parameter and class attribute
 #'   \code{archetypes}.
@@ -153,6 +153,27 @@ alphas <- function(zs, ...) {
 #' @S3method alphas archetypes
 alphas.archetypes <- function(zs, ...) {
   return(zs$alphas)
+}
+
+
+
+#' Beta getter.
+#' @param zs An \code{archetypes}-related object.
+#' @param ... Further arguments.
+#' @return Beta matrix.
+#' @export
+betas <- function(zs, ...) {
+  UseMethod('betas')
+}
+
+#' Beta getter.
+#' @param zs An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Beta matrix.
+#' @method betas archetypes
+#' @S3method betas archetypes
+betas.archetypes <- function(zs, ...) {
+  return(zs$betas)
 }
 
 

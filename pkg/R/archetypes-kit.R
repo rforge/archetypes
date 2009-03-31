@@ -5,7 +5,7 @@
 
 
 #' Perform archetypal analysis on a data matrix.
-#' @param data A numeric $n \times m$ data matrix.
+#' @param data A numeric \eqn{n \times m} data matrix.
 #' @param k The number of archetypes.
 #' @param maxIterations The maximum number of iterations.
 #' @param minImprovement The minimal value of improvement between two

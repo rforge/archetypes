@@ -1,10 +1,10 @@
 Package: archetypes
 Type: Package
 Title: Archetypal Analysis
-Version: 0.1
-Date: 2008-11-26
+Version: 0.1-1
+Date: 2009-03-13
 Depends: nnls (>= 1.1)
-Suggests: MASS
+Suggests: MASS, vcd
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Description: The main function archetypes implements a framework for
@@ -14,4 +14,5 @@ Description: The main function archetypes implements a framework for
   Roxygen documentation system. At the moment, Roxygen does not produce
   "good" help pages for the everyday use of a package; we refer to the
   vignette for a consistent package illustration.
-License: GPL version 2 or newer
+License: GPL (>= 2)
+Revision: 13
