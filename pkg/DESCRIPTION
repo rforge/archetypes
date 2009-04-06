@@ -2,7 +2,7 @@ Package: archetypes
 Type: Package
 Title: Archetypal Analysis
 Version: 0.1-1
-Date: 2009-03-13
+Date: 2009-04-06
 Depends: nnls (>= 1.1)
 Suggests: MASS, vcd
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
@@ -15,4 +15,4 @@ Description: The main function archetypes implements a framework for
   "good" help pages for the everyday use of a package; we refer to the
   vignette for a consistent package illustration.
 License: GPL (>= 2)
-Revision: 13
+Revision: 14

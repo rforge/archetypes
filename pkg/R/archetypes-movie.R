@@ -10,6 +10,9 @@
 #'   iteration after the plot call.
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
+#' @usage
+#' movieplot(zs, data, show=c('atypes', 'adata'),
+#'           ssleep=0, bsleep=0, postfn=function(iter){}, ...)
 #' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata'),
                       ssleep=0, bsleep=0, postfn=function(iter){}, ...) {
