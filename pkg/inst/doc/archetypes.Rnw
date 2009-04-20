@@ -938,9 +938,9 @@ generalization towards the class of $k$-means-like algorithms.
 
 \section*{Computational details}
 
-All computations and graphics in this paper have been done using
-\proglang{R} version 2.7.1 with the packages \pkg{archetypes} 0.1,
-\pkg{MASS} 7.2-43, \pkg{nnls} 1.1 and \pkg{tools} 2.7.1.
+<<print=TRUE,echo=TRUE>>=
+sessionInfo()
+@ 
 
 The newest released version of \pkg{archetypes} is always available
 from the Comprehensive R Archive Network at

@@ -13,6 +13,7 @@
 #' @usage
 #' movieplot(zs, data, show=c('atypes', 'adata'),
 #'           ssleep=0, bsleep=0, postfn=function(iter){}, ...)
+#' @aliases movieplot
 #' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata'),
                       ssleep=0, bsleep=0, postfn=function(iter){}, ...) {
