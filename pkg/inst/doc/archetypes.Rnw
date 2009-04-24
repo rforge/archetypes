@@ -134,9 +134,9 @@ archetypes according to the two fundamentals:
 	\item The data are best approximated by convex combinations of the
 	archetypes, i.e., they minimize
 	\[
-		\mbox{RSS} = \|X - Z^{\top} \alpha\|_2
+		\mbox{RSS} = \|X - \alpha Z^{\top}\|_2
 	\]
-	with $\alpha$, the coefficients of the archetypes, a $k \times n$
+	with $\alpha$, the coefficients of the archetypes, an $n \times k$
 	matrix; the elements are required to be greater equal $0$ and
 	their sum must be $1$, i.e., $\sum_{j=1}^{k} \alpha_{ij} = 1$
 	with $\alpha_{ij} \geq 0$ and $i = 1, \ldots, n$. $\|\cdot\|_2$ 
