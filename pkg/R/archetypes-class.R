@@ -14,6 +14,7 @@
 #' @param kappas The kappas for each system of linear equations.
 #' @param betas The data coefficients; a \eqn{p \times n} matrix.
 #' @param zas The temporary archetypes.
+#' @param weights Vector of data weights within \eqn{[0, 1]}.
 #' @return A list with an element for each parameter and class attribute
 #'   \code{archetypes}.
 #' @seealso \code{\link{archetypes}}, \code{\link{atypes}}, \code{\link{ntypes}},
@@ -21,19 +22,26 @@
 #'   \code{\link{ahistory}}, \code{\link{nhistory}}
 #' @export
 as.archetypes <- function(archetypes, k, alphas, rss, iters=NULL, call=NULL,
-                          history=NULL, kappas=NULL, betas=NULL, zas=NULL) {
-  
-  return(structure(list(archetypes=archetypes,
-                        k=k,
-                        alphas=alphas,
-                        rss=rss,
-                        iters=iters,
-                        kappas=kappas,
-                        betas=betas,
-                        zas=zas,
-                        call=call,
-                        history=history),
-                   class='archetypes'))  
+                          history=NULL, kappas=NULL, betas=NULL, zas=NULL,
+                          weights=NULL) {
+
+  a <- structure(list(archetypes=archetypes,
+                      k=k,
+                      alphas=alphas,
+                      rss=rss,
+                      iters=iters,
+                      kappas=kappas,
+                      betas=betas,
+                      zas=zas,
+                      call=call,
+                      history=history,
+                      weights=weights),
+                 class='archetypes')
+
+  if ( !is.null(weights) )
+    class(a) <- c('weightedArchetypes', class(a))
+
+  a
 }
 
 
@@ -50,7 +58,7 @@ print.archetypes <- function(x, full=TRUE, ...) {
     cat('Archetypes object\n\n')
     cat(deparse(x$call), '\n\n')
   }
-  
+
   cat('Convergence after', x$iters, 'iterations\n')
   cat('with RSS = ', rss(x), '.\n', sep='')
 }
@@ -223,7 +231,7 @@ ahistory.archetypes <- function(zs, step, ...) {
     s <- paste('s', step, sep='')
   else
     s <- paste('s', nhistory(zs) + step - 1, sep='')
-  
+
   return(zs$history[[s]][[1]])
 }
 

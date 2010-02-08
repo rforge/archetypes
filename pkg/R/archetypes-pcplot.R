@@ -7,6 +7,7 @@
 #' @param data A matrix or data frame.
 #' @param data.col Color of data lines.
 #' @param data.lwd Width of data lines.
+#' @param data.lty Type of data lines.
 #' @param atypes.col Color of archetypes lines.
 #' @param atypes.lwd Width of archetypes lines.
 #' @param atypes.lty Type of archetypes lines.
@@ -19,17 +20,36 @@
 #' @return Undefined.
 #' @method pcplot archetypes
 #' @S3method pcplot archetypes
-pcplot.archetypes <- function(x, data, data.col=gray(0.7), data.lwd=1,
+pcplot.archetypes <- function(x, data, data.col=gray(0.7), data.lwd=1, data.lty=1,
                               atypes.col=2, atypes.lwd=2, atypes.lty=1,
                               chull=NULL, chull.col=1, chull.lwd=2, chull.lty=1, ...) {
 
-  pcplot(data, col=data.col, lwd=data.lwd, ...)
+  pcplot(data, col=data.col, lwd=data.lwd, lty=data.lty, ...)
 
   if ( !is.null(chull) )
     lines.pcplot(data[chull,], data,
                  col=chull.col, lwd=chull.lwd, lty=chull.lty, ...)
-  
+
   lines.pcplot(atypes(x), data,
                col=atypes.col, lwd=atypes.lwd, lty=atypes.lty, ...)
 }
 
+
+
+#' Parallel coordinates of weighted data and archetypes.
+#' @param x An \code{\link{archetypes}} object.
+#' @param data A matrix or data frame.
+#' @param data.col Function to calculate weighted data lines color.
+#' @param ... Passed to \code{\link{pcplot.archetypes}}.
+#' @return Undefined.
+#' @method pcplot weightedArchetypes
+#' @S3method pcplot weightedArchetypes
+#' @noRd
+pcplot.weightedArchetypes <- function(x, data,
+                                      data.col=function(x) gray(1 - x), ...) {
+
+  col <- data.col(x$weights)
+  lty <- ifelse(x$weights == 0, 2, 1)
+
+  pcplot.archetypes(x, data, data.col=col, data.lty=lty, ...)
+}
