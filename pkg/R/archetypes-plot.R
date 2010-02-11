@@ -7,13 +7,13 @@ ahull <- function(zs) {
   a <- rbind(atypes(zs), atypes(zs)[1,])
   xc <- a[,1]; xm <- mean(xc)
   yc <- a[,2]; ym <- mean(yc)
-
+  
   real <- xc - xm
   imag <- yc - ym
   angle <- atan2(imag, real)
-
+  
   index <- order(angle)
-
+  
   return(a[c(index, index[1]),])
 }
 
@@ -24,7 +24,6 @@ ahull <- function(zs) {
 #' @param y A matrix or data frame.
 #' @param data.col Color of data points.
 #' @param data.pch Type of data points.
-#' @param data.bg Fill color for data points.
 #' @param atypes.col Color of archetypes points.
 #' @param atypes.pch Type of archetypes points.
 #' @param ahull.show Show approximated convex hull.
@@ -47,7 +46,7 @@ ahull <- function(zs) {
 #' @export
 #' @noRd
 plot.archetypes <- function(x, y,
-                            data.col=gray(0.7), data.pch=19, data.bg=NULL,
+                            data.col=gray(0.7), data.pch=19,
                             atypes.col=2, atypes.pch=19,
                             ahull.show=TRUE, ahull.col=atypes.col,
                             chull=NULL, chull.col=1, chull.pch=19,
@@ -56,7 +55,7 @@ plot.archetypes <- function(x, y,
 
   zs <- x; data <- y;
 
-  plot(data, col=data.col, pch=data.pch, bg=data.bg, ...)
+  plot(data, col=data.col, pch=data.pch, ...)
   points(atypes(zs), col=atypes.col, pch=atypes.pch, ...)
 
   if ( !is.null(chull) ) {
@@ -71,37 +70,11 @@ plot.archetypes <- function(x, y,
   if ( adata.show ) {
     ### Based on an idea of Bernard Pailthorpe.
     adata <- adata(zs)
-    link.col <- rep(link.col, length.out=nrow(adata))
-
-    for ( i in seq_len(nrow(data)) )
-      lines(rbind(data[i,], adata[i,]), col=link.col[i], ...)
-
+    
     points(adata, col=adata.col, pch=adata.pch, ...)
+    for ( i in seq_len(nrow(data)) )
+      lines(rbind(data[i,], adata[i,]), col=link.col, ...)
   }
-
-
-  invisible(NULL)
-}
-
-
-
-#' Plot of weighted data and archetypes.
-#' @param x An \code{\link{archetypes}} object.
-#' @param y A matrix or data frame.
-#' @param data.col Color of data points.
-#' @param data.pch Type of data points.
-#' @param data.bg Function to calculate weighted data point color.
-#' @param ... Passed to the underlying \code{\link{plot.archetypes}} functions.
-#' @return Undefined.
-#' @method plot weightedArchetypes
-#' @export
-#' @noRd
-plot.weightedArchetypes <- function(x, y,
-                                    data.col=1, data.pch=21,
-                                    data.bg=function(x) gray(1 - x), ...) {
-
-  plot.archetypes(x, y, data.pch = data.pch, data.col=data.col,
-                  data.bg=data.bg(x$weights), ...)
 }
 
 
@@ -124,11 +97,11 @@ plot.stepArchetypes <- function(x, y,
                                 data.col=gray(0.7), data.pch=19,
                                 atypes.col=(seq_len(length(x) * length(x[[1]]))+1),
                                 atypes.pch=19, ahull.show=TRUE, ahull.col=atypes.col, ...) {
-
+  
   zs <- x; data <- y;
-
+  
   flatzs <- unlist(zs, recursive=FALSE)
-
+  
   plot(data, col=data.col, pch=data.pch, ...)
   for ( i in seq_along(flatzs) ) {
     a <- flatzs[[i]]
@@ -138,6 +111,5 @@ plot.stepArchetypes <- function(x, y,
       lines(ahull(a), col=ahull.col[i])
   }
 }
-
 
 
