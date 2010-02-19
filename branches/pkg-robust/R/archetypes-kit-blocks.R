@@ -61,11 +61,11 @@ no.rescalefn <- function(x, zs) {
 make.dummyfn <- function(huge=200) {
 
   bp.dummyfn <- function(x) {
-    y = rbind(x, rep(huge, ncol(x))) 
-    
+    y = rbind(x, rep(huge, ncol(x)))
+
     attr(y, '.Meta') = attr(x, '.Meta')
     attr(y, '.Meta')$dummyrow = nrow(y)
-  
+
     return(y)
   }
 
@@ -79,7 +79,7 @@ make.dummyfn <- function(huge=200) {
 #' @return Archetypes zs.
 rm.undummyfn <- function(x, zs) {
   dr = attr(x, '.Meta')$dummyrow
-  
+
   return(zs[-dr,])
 }
 
@@ -119,7 +119,7 @@ qrsolve.zalphasfn <- function(alphas, x) {
 #' @return The solved linear system.
 ginv.zalphasfn <- function(alphas, x) {
   require(MASS)
-  
+
   return(t(ginv(alphas %*% t(alphas)) %*% alphas %*% t(x)))
 }
 
@@ -131,7 +131,7 @@ ginv.zalphasfn <- function(alphas, x) {
 #' @return The solved linear system.
 opt.zalphasfn <- function(alphas, x) {
   z <- rnorm(nrow(x)*nrow(alphas))
-               
+
   fun <- function(z){
     z <- matrix(z, ncol=nrow(alphas))
     sum( (x - z %*% alphas)^2)
@@ -154,9 +154,9 @@ opt.zalphasfn <- function(alphas, x) {
 #' @return Recalculated alpha.
 nnls.alphasfn <- function(coefs, C, d) {
   require(nnls)
-  
+
   n = ncol(d)
-  
+
   for ( j in 1:n )
     coefs[,j] = coef(nnls(C, d[,j]))
 
@@ -175,7 +175,7 @@ snnls.alphasfn <- function(coefs, C, d) {
 
   nc = ncol(C)
   nr = nrow(C)
-  
+
 
   s = svd(C, nv=nc)
   yint = t(s$u) %*% d
@@ -228,7 +228,7 @@ euc.normfn <- function(m) {
 }
 
 
-  
+
 ### Archetypes initialization functions:
 
 #' Init block: generator for random initializtion.
@@ -237,15 +237,15 @@ euc.normfn <- function(m) {
 make.random.initfn <- function(k) {
 
   bp.initfn <- function(x, p) {
-  
+
     n = ncol(x)
     b = matrix(0, nrow=n, ncol=p)
 
     for ( i in 1:p )
       b[sample(n, k, replace=FALSE),i] = 1 / k
-    
+
     a = matrix(1, nrow=p, ncol=n) / p
-    
+
     return(list(betas=b, alphas=a))
   }
 
@@ -259,16 +259,58 @@ make.fix.initfn <- function(indizes) {
 
   fix.initfn <- function(x, p) {
     n = ncol(x)
-  
+
     b = matrix(0, nrow = n, ncol = p)
     b[indizes,] = diag(p)
 
     a = matrix(1, nrow = p, ncol = n) / p
-  
+
     return(list(betas = b, alphas = a))
   }
 
   return(fix.initfn)
+}
+
+
+
+### Weighting functions:
+
+#' Weighting function: move data closer to global center
+#' @param data A numeric \eqn{m \times n} data matrix.
+#' @param weights Vector of data weights within \eqn{[0, 1]}.
+#' @return Weighted data matrix.
+center.weightfn <- function(data, weights) {
+  if ( is.null(weights) )
+    return(data)
+
+  dr <- attr(data, '.Meta')$dummyrow
+
+  weights <- as.numeric(1 - weights)
+  center <- rowMeans(data[-dr,])
+
+  data[-dr,] <- data[-dr,] + t(weights * t(center - data[-dr,]))
+
+  data
+}
+
+
+
+### Reweighting functions:
+
+#'
+#'
+bisquare0.reweightsfn <- function(resid) {
+  resid <- apply(resid, 2, function(.) sum(abs(.)))
+  resid0 <- resid < sqrt(.Machine$double.eps)
+
+  s <- resid / 6 * median(resid[!resid0])
+
+  ifelse(s < 1, (1 - s^2)^2, 0)
+}
+
+tricube.reweightsfn <- function(resid) {
+  resid <- apply(resid, 2, function(.) sum(abs(.)))
+  ifelse(resid < 1, (1 - resid^3)^3, 0)
 }
 
 
@@ -281,23 +323,59 @@ make.fix.initfn <- function(indizes) {
 #' conceptual parts of the algorithm. Currently, only the 'original' family
 #' is supported.
 #'
-#' @param which The kind of archetypes family; currently ignored.
+#' @param which The kind of archetypes family.
+#' @param ... Exchange blocks predefined by the kind of family.
 #' @return A list containing a function for each of the different parts.
 #' @seealso \code{\link{archetypes}}
 #' @export
-archetypesFamily <- function(which=c('default', 'ginv')) {
-  fam <- list(normfn=norm2.normfn,
-              scalefn=std.scalefn,
-              rescalefn=std.rescalefn,
-              dummyfn=make.dummyfn(200),
-              undummyfn=rm.undummyfn,
-              initfn=make.random.initfn(1),
-              alphasfn=nnls.alphasfn,
-              betasfn=nnls.betasfn)
+archetypesFamily <- function(which = c('original', 'weighted', 'robust'), ...) {
 
-  fam$zalphasfn <- switch(which[1],
-                          'default' = qrsolve.zalphasfn,
-                          'ginv' = ginv.zalphasfn)
+  which <- match.arg(which)
+  blocks <- list(...)
 
-  return(fam)
+  family <- do.call(sprintf('.%s.archetypesFamily', which), list())
+  family$which <- which
+  family$which.exchanged <- NULL
+
+  if ( length(blocks) > 0 ) {
+    family$which <- sprintf('%s*', family$which)
+    family$which.exchanged <- names(blocks)
+
+    for ( n in names(blocks) )
+      family[[n]] <- blocks[[n]]
+  }
+
+
+  family
 }
+
+.original.archetypesFamily <- function() {
+  list(normfn = norm2.normfn,
+       scalefn = std.scalefn,
+       rescalefn = std.rescalefn,
+       dummyfn = make.dummyfn(200),
+       undummyfn = rm.undummyfn,
+       initfn = make.random.initfn(1),
+       alphasfn = nnls.alphasfn,
+       betasfn = nnls.betasfn,
+       zalphasfn = qrsolve.zalphasfn,
+       weightfn = function(x, weights) x,
+       reweightsfn = function(x, weights) NULL,
+       class = NULL)
+}
+
+.weighted.archetypesFamily <- function() {
+  f <- .original.archetypesFamily()
+  f$class <- 'weightedArchetypes'
+  f$weightfn <- center.weightfn
+  f
+}
+
+.robust.archetypesFamily <- function() {
+  f <- .original.archetypesFamily()
+  f$class <- 'robustArchetypes'
+  f$weightfn <- center.weightfn
+  f$reweightsfn <- tricube.reweightsfn
+  f
+}
+

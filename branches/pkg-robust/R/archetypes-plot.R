@@ -7,13 +7,13 @@ ahull <- function(zs) {
   a <- rbind(atypes(zs), atypes(zs)[1,])
   xc <- a[,1]; xm <- mean(xc)
   yc <- a[,2]; ym <- mean(yc)
-  
+
   real <- xc - xm
   imag <- yc - ym
   angle <- atan2(imag, real)
-  
+
   index <- order(angle)
-  
+
   return(a[c(index, index[1]),])
 }
 
@@ -46,35 +46,69 @@ ahull <- function(zs) {
 #' @export
 #' @noRd
 plot.archetypes <- function(x, y,
-                            data.col=gray(0.7), data.pch=19,
-                            atypes.col=2, atypes.pch=19,
-                            ahull.show=TRUE, ahull.col=atypes.col,
-                            chull=NULL, chull.col=1, chull.pch=19,
-                            adata.show=FALSE, adata.col=3, adata.pch=13,
-                            link.col=data.col, ...) {
+                            data.col = gray(0.7), data.pch = 19, data.bg = NULL,
+                            atypes.col = 2, atypes.pch = 19,
+                            ahull.show = TRUE, ahull.col = atypes.col,
+                            chull = NULL, chull.col = 1, chull.pch = 19,
+                            adata.show = FALSE, adata.col = 3, adata.pch = 13,
+                            link.col = data.col, link.lty = 1, ...) {
 
   zs <- x; data <- y;
 
-  plot(data, col=data.col, pch=data.pch, ...)
-  points(atypes(zs), col=atypes.col, pch=atypes.pch, ...)
+  plot(data, col = data.col, pch = data.pch, bg = data.bg, ...)
+  points(atypes(zs), col = atypes.col, pch = atypes.pch, ...)
 
   if ( !is.null(chull) ) {
-    points(data[chull,], col=chull.col, pch=chull.pch, ...)
-    lines(data[c(chull, chull[1]),], col=chull.col, ...)
+    points(data[chull,], col = chull.col, pch = chull.pch, ...)
+    lines(data[c(chull, chull[1]),], col = chull.col, ...)
   }
 
   if ( ahull.show )
-    lines(ahull(zs), col=ahull.col)
+    lines(ahull(zs), col = ahull.col)
 
 
   if ( adata.show ) {
     ### Based on an idea of Bernard Pailthorpe.
     adata <- adata(zs)
-    
-    points(adata, col=adata.col, pch=adata.pch, ...)
+    link.col <- rep(link.col, length = nrow(adata))
+    link.lty <- rep(link.lty, length = nrow(adata))
+
+    points(adata, col = adata.col, pch = adata.pch, ...)
     for ( i in seq_len(nrow(data)) )
-      lines(rbind(data[i,], adata[i,]), col=link.col, ...)
+      lines(rbind(data[i,], adata[i,]), col = link.col[i],
+            lty = link.lty[i], ...)
   }
+}
+
+
+
+#' Plot weighted archetypes.
+plot.weightedArchetypes <- function(x, y,
+                                    adata.show = FALSE, data.col = 1, data.pch = 21,
+                                    data.bg = gray, link.col.show = TRUE,
+                                    weights.type = 'weights', ...) {
+  if ( adata.show ) {
+    w <- 1 - weights(x, type = weights.type)
+
+    if ( link.col.show ) {
+      link.col <- ifelse(w == 1, 1, data.bg(w))
+      link.lty <- ifelse(w == 1, 2, 1)
+    }
+
+    plot.archetypes(x, y, adata.show = TRUE, data.pch = data.pch,
+                    data.col = data.col, data.bg = data.bg(w),
+                    link.col = link.col, link.lty = link.lty)
+  }
+  else {
+    plot.archetypes(x, y, ...)
+  }
+}
+
+
+
+#' Plot robust archetypes.
+plot.robustArchetypes <- function(x, y, ...) {
+  plot.weightedArchetypes(x, y, weights.type = 'reweights', ...)
 }
 
 
@@ -97,11 +131,11 @@ plot.stepArchetypes <- function(x, y,
                                 data.col=gray(0.7), data.pch=19,
                                 atypes.col=(seq_len(length(x) * length(x[[1]]))+1),
                                 atypes.pch=19, ahull.show=TRUE, ahull.col=atypes.col, ...) {
-  
+
   zs <- x; data <- y;
-  
+
   flatzs <- unlist(zs, recursive=FALSE)
-  
+
   plot(data, col=data.col, pch=data.pch, ...)
   for ( i in seq_along(flatzs) ) {
     a <- flatzs[[i]]
