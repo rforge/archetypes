@@ -300,6 +300,9 @@ center.weightfn <- function(data, weights) {
 #'
 #'
 bisquare0.reweightsfn <- function(resid) {
+  if ( is.null(resid) )
+    return(NULL)
+
   resid <- apply(resid, 2, function(.) sum(abs(.)))
   resid0 <- resid < sqrt(.Machine$double.eps)
 
@@ -309,6 +312,9 @@ bisquare0.reweightsfn <- function(resid) {
 }
 
 tricube.reweightsfn <- function(resid) {
+  if ( is.null(resid) )
+    return(NULL)
+
   resid <- apply(resid, 2, function(.) sum(abs(.)))
   ifelse(resid < 1, (1 - resid^3)^3, 0)
 }

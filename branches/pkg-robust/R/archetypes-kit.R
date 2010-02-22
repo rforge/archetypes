@@ -40,7 +40,8 @@ archetypes <- function(data, k, maxIterations = 100,
       list(archetypes = as.archetypes(t(family$rescalefn(x, family$undummyfn(x, zs))),
            k, alphas = t(alphas), betas = t(betas), rss = rss, kappas = kappas,
            zas = t(family$rescalefn(x, family$undummyfn(x, zas))),
-           residuals = resid, reweights = reweights))
+           residuals = resid, reweights = reweights,
+           family = list(class = family$class)))
   }
 
   printIter <- function(i) {
@@ -67,13 +68,13 @@ archetypes <- function(data, k, maxIterations = 100,
   betas <- init$betas
   alphas <- init$alphas
 
+  zas <- NULL
   zs <- x %*% betas
 
   resid <- zs %*% alphas - x
   rss <- family$normfn(resid) / n
 
-  zas <- NULL
-  reweights <- NULL
+  reweights <- rep(1, n)
 
   kappas <- c(alphas=kappa(alphas), betas=kappa(betas),
               zas=-Inf, zs=kappa(zs))

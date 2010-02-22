@@ -86,22 +86,21 @@ plot.archetypes <- function(x, y,
 plot.weightedArchetypes <- function(x, y,
                                     adata.show = FALSE, data.col = 1, data.pch = 21,
                                     data.bg = gray, link.col.show = TRUE,
+                                    link.col = data.col, link.lty = 1,
                                     weights.type = 'weights', ...) {
-  if ( adata.show ) {
-    w <- 1 - weights(x, type = weights.type)
+  if ( !adata.show )
+    return(plot.archetypes(x, y, ...))
 
-    if ( link.col.show ) {
-      link.col <- ifelse(w == 1, 1, data.bg(w))
-      link.lty <- ifelse(w == 1, 2, 1)
-    }
+  w <- 1 - weights(x, type = weights.type)
 
-    plot.archetypes(x, y, adata.show = TRUE, data.pch = data.pch,
-                    data.col = data.col, data.bg = data.bg(w),
-                    link.col = link.col, link.lty = link.lty)
+  if ( link.col.show ) {
+    link.col <- ifelse(w == 1, 1, data.bg(w))
+    link.lty <- ifelse(w == 1, 2, 1)
   }
-  else {
-    plot.archetypes(x, y, ...)
-  }
+
+  plot.archetypes(x, y, adata.show = TRUE, data.pch = data.pch,
+                  data.col = data.col, data.bg = data.bg(w),
+                  link.col = link.col, link.lty = link.lty, ...)
 }
 
 

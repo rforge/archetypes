@@ -17,8 +17,8 @@
 #' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata'),
                       ssleep=0, bsleep=0, postfn=function(iter){}, ...) {
-  
-  steps <- length(zs$history)  
+
+  steps <- length(zs$history)
   atypesmovie <- ifelse(show[1] == 'atypes', TRUE, FALSE)
 
   Sys.sleep(ssleep)
@@ -32,7 +32,7 @@ movieplot <- function(zs, data, show=c('atypes', 'adata'),
       plot(adata(a), ...)
 
     postfn(i)
-    
+
     Sys.sleep(bsleep)
   }
 }
@@ -82,7 +82,7 @@ movieplot2 <- function(zs, data, show='atypes',
     plot(a, data, ...)
     Sys.sleep(bsleep)
   }
-  
+
   plot(a, data, ...)
 }
 
@@ -113,7 +113,7 @@ moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
       pcplot(a, data, ...)
     else
       pcplot(adata(a), rx=rx, ...)
-    
+
     Sys.sleep(bsleep)
   }
 }
