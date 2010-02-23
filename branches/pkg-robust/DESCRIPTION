@@ -3,7 +3,7 @@ Type: Package
 Title: Archetypal Analysis
 Version: 1.0
 Date: 2009-04-23
-Depends: nnls (>= 1.1)
+Depends: nnls (>= 1.1), modeltools
 Suggests: MASS, vcd
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>

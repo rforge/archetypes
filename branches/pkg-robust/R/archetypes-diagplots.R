@@ -72,32 +72,59 @@ weights.diagplot <- function(object, weights.type, ...) {
 
 
 
-reweights.diagplot <- function(object, highlight = NULL,
-                               highlight.col = (seq(length(highlight)) + 1), ...) {
+reweights.diagplot <- function(object, col = 1, pch = 1, highlight = NULL,
+                               highlight.col = (seq(length(highlight)) + 1),
+                               highlight.pch = 13, ...) {
 
   y <- rev(lapply(object$history, function(x) x[[1]]$reweights))
   x <- seq(along = y[[1]])
-  col <- rep(1, length = length(x))
+
+  col <- rep(col, length = length(x))
   col[highlight] <- highlight.col
+
+  pch <- rep(pch, length = length(x))
+  pch[highlight] <- highlight.pch
 
   n <- sqrt(length(y))
 
   par(mfrow = c(ceiling(n), ceiling(n)), mar = c(0, 0, 0, 0))
   for ( i in seq(along = y) )
-    plot(x, y[[i]], type = 'p', col = col, xlab = 'Index',
-         ylab = 'Reweights', ...)
+    plot(x, y[[i]], type = 'p', col = col, pch = pch, ylim = c(0, 1),
+         xlab = 'Index', ylab = 'Reweights',  ...)
 }
 
 
 
-i.reweights.diagplot <- function(object, i, lty = 1,
-                                 col = (seq(length(i)) + 1), ...) {
+reweights.curve.diagplot <- function(object, i, lty = 1,
+                                     col = (seq(length(i)) + 1), ...) {
   y <- sapply(object$history, function(x) x[[1]]$reweights[i])
   y <- apply(y, 1, rev)
 
   matplot(y, type = 'l', lty = lty, col = col, ylab = 'Reweights',
-          xlab = 'Iterations', ...)
+          xlab = 'Iterations', ylim = c(0, 1), ...)
 }
 
 
 
+reweights.liftoff.diagplot <- function(object, ...) {
+
+  y <- sapply(object$history, function(x) x[[1]]$reweights)
+  y <- rev(colSums(y != 0))
+
+  barplot(y, xlab = 'Iterations', ylab = 'Reweights > 0', ...)
+}
+
+
+
+reweights.rss.diagplot <- function(object, ...) {
+  y1 <- sapply(object$history, function(x) x[[1]]$reweights)
+  y1 <- rev(colSums(y1))
+
+  y2 <- rev(sapply(object$history, function(x) x[[1]]$rss))
+
+  x <- seq(along = y1)
+
+  par(mfrow = c(2, 1))
+  plot(x, y1, type = 'l', xlab = 'Iterations', ylab = 'Reweights', ...)
+  plot(x, y2, type = 'l', xlab = 'Iterations', ylab = 'RSS', ...)
+}

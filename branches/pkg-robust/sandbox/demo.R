@@ -1,6 +1,12 @@
 
 library(archetypes.dev.robust)
 
+library(modeltools)
+sapply(list.files('../R', full = TRUE), source, echo = TRUE)
+
+load('../data/toy.RData')
+
+
 
 
 ### Archetypes with one outlier; breakdown point simulations  ########
@@ -112,6 +118,7 @@ ra2 <- archetypes(toy.o1, 3, family = archetypesFamily('robust'))
 plot(ra2, toy.o1, adata.show = TRUE)
 
 weights.diagplot(ra2, weights.type = 'reweights')
+rss.diagplot(ra2)
 
 par(mfrow = c(1, 6), mar = c(0, 0, 0, 0))
 movieplot(ra2, toy.o1, adata.show = TRUE, link.col.show = FALSE,
@@ -124,7 +131,13 @@ reweights.diagplot(ra1)
 reweights.diagplot(ra2)
 
 reweights.diagplot(ra1, highlight = c(1, 2))
-i.reweights.diagplot(ra1, c(1, 2))
+reweights.curve.diagplot(ra1, c(1, 2))
+
+reweights.liftoff.diagplot(ra1)
+reweights.liftoff.diagplot(ra2)
+
+reweights.rss.diagplot(ra1)
+reweights.rss.diagplot(ra2)
 
 
 
@@ -140,9 +153,7 @@ movieplot(a2, toy, adata.show = TRUE, link.col.show = FALSE,
           link.lty = 0, axes = FALSE, postfn = function(iter) box())
 
 reweights.diagplot(a2)
-i.reweights.diagplot(a2, 1:50)
-
-
+reweights.curve.diagplot(a2, 1:50)
 
 # => Hmm ...
 
@@ -151,6 +162,23 @@ a3 <- stepArchetypes(toy, family = archetypesFamily('robust'), k = 3, nrep = 5)
 
 plot(a3, toy)
 
-# => Not the expected behavior!
+# => Not the intended behavior!
 
 
+
+### So, as always, it is not the easy solution ... ###################
+
+set.seed(1235)
+ra2 <- archetypes(toy.o1, 3, family = archetypesFamily('robust',
+                             reweightsfn = bisquare.reweightsfn))
+
+plot(ra2, toy.o1, adata.show = TRUE)
+
+weights.diagplot(ra2, weights.type = 'reweights')
+rss.diagplot(ra2)
+
+par(mfrow = c(2, 5), mar = c(0, 0, 0, 0))
+movieplot(ra2, toy.o1, adata.show = TRUE, link.col.show = FALSE,
+          link.lty = 0, axes = FALSE, postfn = function(iter) box())
+
+reweights.rss.diagplot(ra2)

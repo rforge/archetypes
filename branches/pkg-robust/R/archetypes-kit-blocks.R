@@ -297,13 +297,8 @@ center.weightfn <- function(data, weights) {
 
 ### Reweighting functions:
 
-#'
-#'
 bisquare0.reweightsfn <- function(resid) {
-  if ( is.null(resid) )
-    return(NULL)
-
-  resid <- apply(resid, 2, function(.) sum(abs(.)))
+  resid <- apply(resid, 2, function(x) sum(abs(x)))
   resid0 <- resid < sqrt(.Machine$double.eps)
 
   s <- resid / 6 * median(resid[!resid0])
@@ -311,11 +306,19 @@ bisquare0.reweightsfn <- function(resid) {
   ifelse(s < 1, (1 - s^2)^2, 0)
 }
 
-tricube.reweightsfn <- function(resid) {
-  if ( is.null(resid) )
-    return(NULL)
+bisquare.reweightsfn <- function(resid) {
+  resid.abs <- apply(resid, 2, function(x) sum(abs(x)))
 
-  resid <- apply(resid, 2, function(.) sum(abs(.)))
+  mar <- mad(resid.abs, constant = 1) / 0.6754
+  k <- 4.685 * mar
+
+  resid.euc <- apply(resid / k, 2, function(x) sum(x^2))
+
+  ifelse(resid.abs <= k, (1 - resid.euc)^2, 0)
+}
+
+tricube.reweightsfn <- function(resid) {
+  resid <- apply(resid, 2, function(x) sum(abs(x)))
   ifelse(resid < 1, (1 - resid^3)^3, 0)
 }
 
