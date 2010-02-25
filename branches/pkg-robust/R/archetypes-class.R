@@ -46,6 +46,8 @@ as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
 }
 
 setOldClass('archetypes')
+setOldClass('weightedArchetypes')
+setOldClass('robustArchetypes')
 
 
 
@@ -92,6 +94,8 @@ parameters.archetypes <- function(object, ...) {
 
 #' @importFrom modeltools parameters
 setMethod('parameters', 'archetypes', parameters.archetypes)
+setMethod('parameters', 'weightedArchetypes', parameters.archetypes)
+setMethod('parameters', 'robustArchetypes', parameters.archetypes)
 
 
 

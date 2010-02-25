@@ -79,7 +79,11 @@ plot(a1, toy.o1)
 plot(a1, toy.o1, adata.show = TRUE)
 
 residuals.diagplot(a1)
+
 rss.diagplot(a1)
+rss.diagplot(a1, sort = TRUE)
+
+archetypes.view.diagplot(a1, toy.o1)
 
 
 
@@ -105,6 +109,9 @@ plot(ra1, toy.o1, adata.show = TRUE)
 residuals.diagplot(ra1)
 rss.diagplot(ra1)
 weights.diagplot(ra1, weights.type = 'reweights')
+
+archetypes.view.diagplot(ra1, toy.o1)
+archetypes.view.diagplot(ra1, toy.o1, ref.order = 1)
 
 par(mfrow = c(6, 7), mar = c(0, 0, 0, 0))
 movieplot(ra1, toy.o1, adata.show = TRUE, link.col.show = FALSE,
@@ -168,17 +175,8 @@ plot(a3, toy)
 
 ### So, as always, it is not the easy solution ... ###################
 
-set.seed(1235)
-ra2 <- archetypes(toy.o1, 3, family = archetypesFamily('robust',
-                             reweightsfn = bisquare.reweightsfn))
-
-plot(ra2, toy.o1, adata.show = TRUE)
-
-weights.diagplot(ra2, weights.type = 'reweights')
-rss.diagplot(ra2)
-
-par(mfrow = c(2, 5), mar = c(0, 0, 0, 0))
-movieplot(ra2, toy.o1, adata.show = TRUE, link.col.show = FALSE,
-          link.lty = 0, axes = FALSE, postfn = function(iter) box())
-
-reweights.rss.diagplot(ra2)
+# * Burn-In phase
+# * Initial archtypes drawn around the data's median
+# * "Refrigerative" reweights (similar to simulated annealing)
+# * Multi-dimensional median?
+# * Weights for alpha and beta separately

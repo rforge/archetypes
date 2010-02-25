@@ -1,4 +1,4 @@
-
+### distanz von jedem archetyp zum nächsten punkt
 
 residuals.diagplot <- function(object, ref.order = 1, ...) {
   y <- residuals(object)
@@ -26,7 +26,8 @@ residuals.diagplot <- function(object, ref.order = 1, ...) {
     abline(h = 0, lty = 2, col = gray(0.7), ...)
   }
 
-  invisible(NULL)
+
+  invisible(list(x = x, y = y))
 }
 
 
@@ -40,10 +41,13 @@ rss.diagplot.archetypes <- function(object, sort = FALSE, ...) {
   x <- seq(length = length(y))
 
   if ( sort )
-    y <- sort(y)
+    xy <- sort(y)
 
   plot(x, y, xlab = 'Index', ylab = 'RSS', ...)
   abline(h = 0, lty = 2, col = gray(0.7), ...)
+
+
+  invisible(list(x = x, y = y))
 }
 
 rss.diagplot.repArchetypes <- function(object, ...) {
@@ -127,4 +131,26 @@ reweights.rss.diagplot <- function(object, ...) {
   par(mfrow = c(2, 1))
   plot(x, y1, type = 'l', xlab = 'Iterations', ylab = 'Reweights', ...)
   plot(x, y2, type = 'l', xlab = 'Iterations', ylab = 'RSS', ...)
+}
+
+
+archetypes.view.diagplot <- function(object, data, ref.order = NULL,
+                                     distfn = distEuclidean, ...) {
+
+  d <- distfn(data, parameters(object))
+  x <- seq(length = nrow(d))
+
+  if ( is.null(ref.order) )
+    ix <- x
+  else
+    ix <- order(d[, 1])
+
+  ylim <- c(0, max(d))
+
+  par(mfrow = c(ncol(d), 1))
+  for ( i in seq(length = ncol(d)) )
+    plot(x, d[ix, i], xlab = sprintf('Archetype %s', i), ylab = 'Distance',
+         ylim = ylim, ...)
+
+  invisible(d)
 }

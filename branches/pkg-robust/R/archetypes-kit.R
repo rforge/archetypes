@@ -94,7 +94,7 @@ archetypes <- function(data, k, maxIterations = 100,
   tryCatch(while ( (i <= maxIterations) & (imp >= minImprovement) ) {
 
     ## Reweight data:
-    reweights <- family$reweightsfn(resid)
+    reweights <- family$reweightsfn(resid, reweights)
     x <- family$weightfn(x0, reweights)
 
 

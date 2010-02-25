@@ -297,7 +297,7 @@ center.weightfn <- function(data, weights) {
 
 ### Reweighting functions:
 
-bisquare0.reweightsfn <- function(resid) {
+bisquare0.reweightsfn <- function(resid, reweights) {
   resid <- apply(resid, 2, function(x) sum(abs(x)))
   resid0 <- resid < sqrt(.Machine$double.eps)
 
@@ -306,7 +306,7 @@ bisquare0.reweightsfn <- function(resid) {
   ifelse(s < 1, (1 - s^2)^2, 0)
 }
 
-bisquare.reweightsfn <- function(resid) {
+bisquare.reweightsfn <- function(resid, reweights) {
   resid.abs <- apply(resid, 2, function(x) sum(abs(x)))
 
   mar <- mad(resid.abs, constant = 1) / 0.6754
@@ -317,7 +317,7 @@ bisquare.reweightsfn <- function(resid) {
   ifelse(resid.abs <= k, (1 - resid.euc)^2, 0)
 }
 
-tricube.reweightsfn <- function(resid) {
+tricube.reweightsfn <- function(resid, reweights) {
   resid <- apply(resid, 2, function(x) sum(abs(x)))
   ifelse(resid < 1, (1 - resid^3)^3, 0)
 }
