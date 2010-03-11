@@ -42,13 +42,16 @@ barplot.archetypes <- function(height, data,
 
     layout(matrix(1:p, nrow = p, byrow = TRUE))
     for ( i in 1:(p - 1) ) {
-      par(mar = c(0, 4, 1, 0) + 0.1)
-      x.at <- barplot(atypes[i,], ylab=ylab, ylim=ylim, names.arg='',
-                      las=2, ...)
+      par(mar = c(0, 5, 1, 0) + 0.1)
+      x.at <- barplot(atypes[i,], ylab=ylab, ylim=ylim,
+                      names.arg='', las=2, ...)
+      mtext(sprintf('Archetype %s', i), side = 2, line = 4,
+            cex = par('cex'))
     }
     text(x.at, par("usr")[3] - 1, srt = 90, adj = 1,
          labels = colnames(atypes), xpd = NA)
   }
+
 
   which <- match.arg(which)
   if ( which == 'beside' )
