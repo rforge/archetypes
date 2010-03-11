@@ -3,8 +3,10 @@
 #' Barplot of archetypes.
 #' @param height An \code{\link{archetypes}} object.
 #' @param data The original data matrix.
-#' @param beside Show one barplot for each archetype, or one barplot
-#'    with stacked bars, either per archetype or per variable.
+#' @param which \code{below} creates a barplot for each archetype,
+#'    \code{beside} creates one barplot with bars side by side.
+#' @param which.beside Barplot according to \code{atypes} or \code{variables}.
+#' @param which.below \code{compressed} plots the labels only once.
 #' @param percentage Show real values or percentages according to the
 #'    original data.
 #' @param ... Passed to the underlying \code{\link{barplot}} call.
@@ -13,12 +15,50 @@
 #' @importFrom graphics barplot
 #' @export
 barplot.archetypes <- function(height, data,
-                               beside=c('FALSE', 'atypes', 'variables'),
+                               which = c('below', 'beside'),
+                               which.beside = c('atypes', 'variables'),
+                               which.below = c('compressed', 'default'),
                                percentage=FALSE, ...) {
-  beside <- match.arg(beside)
+
+  .beside.atypes <- function() {
+    barplot(t(atypes), ylab=ylab, beside=TRUE, ylim=ylim, ...)
+  }
+
+  .beside.variables <- function() {
+    barplot(atypes, ylab=ylab, beside=TRUE, ylim=ylim, ...)
+  }
+
+  .below.default <- function() {
+    p <- nrow(atypes)
+
+    layout(matrix(1:p, nrow = p, byrow = TRUE))
+    for ( i in 1:p )
+      barplot(atypes[i,], main=paste('Archetype', i),
+              ylab=ylab, ylim=ylim, ...)
+  }
+
+  .below.compressed <- function() {
+    p <- nrow(atypes) + 1
+
+    layout(matrix(1:p, nrow = p, byrow = TRUE))
+    for ( i in 1:(p - 1) ) {
+      par(mar = c(0, 4, 1, 0) + 0.1)
+      x.at <- barplot(atypes[i,], ylab=ylab, ylim=ylim, names.arg='',
+                      las=2, ...)
+    }
+    text(x.at, par("usr")[3] - 1, srt = 90, adj = 1,
+         labels = colnames(atypes), xpd = NA)
+  }
+
+  which <- match.arg(which)
+  if ( which == 'beside' )
+    which.arg <- match.arg(which.beside)
+  else
+    which.arg <- match.arg(which.below)
 
   atypes <- atypes(height)
-  rownames(atypes) <- sprintf('Archetype %s', seq(length = nrow(atypes)))
+  rownames(atypes) <- sprintf('Archetype %s',
+                              seq(length = nrow(atypes)))
 
   if ( !percentage ) {
     ylab <- 'Value'
@@ -31,19 +71,8 @@ barplot.archetypes <- function(height, data,
     ylim <- c(0,100)
   }
 
-  if ( beside == 'variables' ) {
-    barplot(atypes, ylab=ylab, beside=TRUE, ylim=ylim, ...)
-  }
-  else if ( beside == 'atypes' ) {
-    barplot(t(atypes), ylab=ylab, beside=TRUE, ylim=ylim, ...)
-  }
-  else {
-    p <- nrow(atypes)
+  do.call(sprintf('.%s.%s', which, which.arg), list())
 
-    par(mfrow=c(p,1))
-    for ( i in 1:p )
-      barplot(atypes[i,], main=paste('Archetype', i),
-              ylab=ylab, ylim=ylim, ...)
-  }
+  invisible(atypes)
 }
 
