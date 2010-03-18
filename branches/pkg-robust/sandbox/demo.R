@@ -84,6 +84,9 @@ rss.diagplot(a1)
 rss.diagplot(a1, sort = TRUE)
 
 archetypes.view.diagplot(a1, toy.o1)
+archetypes.view.diagplot(a1, toy.o1, ref.order = 1)
+
+archetypes.distance.diagplot(a1, toy.o1)
 
 
 
@@ -113,7 +116,7 @@ weights.diagplot(ra1, weights.type = 'reweights')
 archetypes.view.diagplot(ra1, toy.o1)
 archetypes.view.diagplot(ra1, toy.o1, ref.order = 1)
 
-par(mfrow = c(6, 7), mar = c(0, 0, 0, 0))
+par(mfrow = c(7, 6), mar = c(0, 0, 0, 0))
 movieplot(ra1, toy.o1, adata.show = TRUE, link.col.show = FALSE,
           link.lty = 0, axes = FALSE, postfn = function(iter) box())
 
@@ -155,12 +158,14 @@ a2 <- archetypes(toy, 3, family = archetypesFamily('robust'))
 
 plot(a2, toy, adata.show = TRUE)
 
-par(mfrow = c(6, 6), mar = c(0, 0, 0, 0))
+par(mfrow = c(5, 4), mar = c(0, 0, 0, 0))
 movieplot(a2, toy, adata.show = TRUE, link.col.show = FALSE,
           link.lty = 0, axes = FALSE, postfn = function(iter) box())
 
 reweights.diagplot(a2)
+reweights.liftoff.diagplot(a2)
 reweights.curve.diagplot(a2, 1:50)
+
 
 # => Hmm ...
 

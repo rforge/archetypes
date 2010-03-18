@@ -81,7 +81,6 @@ plot.archetypes <- function(x, y,
 }
 
 
-
 #' Plot weighted archetypes.
 plot.weightedArchetypes <- function(x, y,
                                     adata.show = FALSE, data.col = 1, data.pch = 21,

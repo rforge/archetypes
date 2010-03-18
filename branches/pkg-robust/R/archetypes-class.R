@@ -15,8 +15,10 @@
 #' @param betas The data coefficients; a \eqn{p \times n} matrix.
 #' @param zas The temporary archetypes.
 #' @param family The archetypes family.
+#' @param familyArgs Additional arguments for family blocks.
 #' @param residuals The residuals.
 #' @param weights The data weights.
+#' @param reweights The data reweights.
 #' @return A list with an element for each parameter and class attribute
 #'   \code{archetypes}.
 #' @seealso \code{\link{archetypes}}, \code{\link{atypes}}, \code{\link{ntypes}},
@@ -25,8 +27,8 @@
 #' @export
 as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
                           history = NULL, kappas = NULL, betas = NULL, zas = NULL,
-                          family = NULL, residuals = NULL, weights = NULL,
-                          reweights = NULL) {
+                          family = NULL, familyArgs = NULL, residuals = NULL,
+                          weights = NULL, reweights = NULL) {
 
   return(structure(list(archetypes = archetypes,
                         k = k,
@@ -39,6 +41,7 @@ as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
                         call = call,
                         history = history,
                         family = family,
+                        familyArgs = familyArgs,
                         residuals = residuals,
                         weights = weights,
                         reweights = reweights),
@@ -46,8 +49,6 @@ as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
 }
 
 setOldClass('archetypes')
-setOldClass('weightedArchetypes')
-setOldClass('robustArchetypes')
 
 
 
@@ -94,8 +95,6 @@ parameters.archetypes <- function(object, ...) {
 
 #' @importFrom modeltools parameters
 setMethod('parameters', 'archetypes', parameters.archetypes)
-setMethod('parameters', 'weightedArchetypes', parameters.archetypes)
-setMethod('parameters', 'robustArchetypes', parameters.archetypes)
 
 
 

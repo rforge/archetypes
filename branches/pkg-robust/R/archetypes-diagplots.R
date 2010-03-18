@@ -1,4 +1,3 @@
-### distanz von jedem archetyp zum nächsten punkt
 
 residuals.diagplot <- function(object, ref.order = 1, ...) {
   y <- residuals(object)
@@ -143,14 +142,54 @@ archetypes.view.diagplot <- function(object, data, ref.order = NULL,
   if ( is.null(ref.order) )
     ix <- x
   else
-    ix <- order(d[, 1])
+    ix <- order(d[, ref.order])
 
   ylim <- c(0, max(d))
 
   par(mfrow = c(ncol(d), 1))
   for ( i in seq(length = ncol(d)) )
-    plot(x, d[ix, i], xlab = sprintf('Archetype %s', i), ylab = 'Distance',
-         ylim = ylim, ...)
+    plot(x, d[ix, i], xlab = sprintf('Archetype %s', i),
+         ylab = 'Distance', ylim = ylim, ...)
+
+  invisible(d)
+}
+
+
+archetypes.distance.diagplot <- function(object, data,
+                                         distfn = distEuclidean, ...) {
+
+  opar <- par()
+
+  d <- distfn(data, parameters(object))
+  x <- seq(length = nrow(d))
+
+  ylim <- c(0, max(d))
+
+  globals <- array(dim = c(dim(d), 2))
+
+  par(mfrow = c(ncol(d) + 1, 1), xpd = NA)
+  for ( i in seq(length = ncol(d)) ) {
+    ix <- order(d[, i])
+
+    plot(x, d[ix, i], xlab = '', ylab = 'Distance', ylim = ylim,
+         type = 'b', axes = FALSE, ...)
+    axis(2)
+    box()
+
+    globals[, i, 1] <- grconvertX(rank(d[, i]), to = 'device')
+    globals[, i, 2] <- grconvertY(d[, i], to = 'device')
+  }
+  axis(1)
+  mtext('Data index', side = 1, line = 3, cex = par('cex'))
+
+  for ( i in seq(length = nrow(globals)) ) {
+    px <- grconvertX(globals[i, , 1], from = 'device')
+    py <- grconvertY(globals[i, , 2], from = 'device')
+
+    lines(px, py, col = gray(0.7))
+  }
+
+  par(opar)
 
   invisible(d)
 }

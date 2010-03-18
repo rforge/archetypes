@@ -7,6 +7,7 @@
 #' Perform archetypal analysis on a data matrix.
 #' @param data A numeric \eqn{n \times m} data matrix.
 #' @param k The number of archetypes.
+#' @param weights Data weights vector.
 #' @param maxIterations The maximum number of iterations.
 #' @param minImprovement The minimal value of improvement between two
 #'   iterations.
@@ -16,6 +17,7 @@
 #'   further analyses.
 #' @param family Blocks defining the underlying problem solving mechanisms;
 #'   see \code{\link{archetypesFamily}}.
+#' @param ... Additional arguments for family blocks.
 #' @return An object of class \code{\link{archetypes}}, see
 #'   \code{\link{as.archetypes}}.
 #' @seealso \code{\link{stepArchetypes}}
@@ -26,13 +28,14 @@
 #'   a <- archetypes(toy, 3)
 #' @export
 #' @note Please see the vignette for a detailed explanation!
-archetypes <- function(data, k, maxIterations = 100,
+archetypes <- function(data, k, weights = NULL, maxIterations = 100,
                        minImprovement = sqrt(.Machine$double.eps),
                        maxKappa = 1000, verbose = TRUE, saveHistory = TRUE,
-                       family = archetypesFamily('original'), weights = NULL) {
+                       family = archetypesFamily('original'), ...) {
 
   ### Helpers:
   mycall <- match.call()
+  famargs <- list(...)
 
   history <- NULL
   snapshot <- function(i) {
@@ -53,9 +56,9 @@ archetypes <- function(data, k, maxIterations = 100,
 
   ### Data preparation:
   x1 <- t(data)
-  x1 <- family$scalefn(x1)
-  x1 <- family$dummyfn(x1)
-  x0 <- family$weightfn(x1, weights)
+  x1 <- family$scalefn(x1, ...)
+  x1 <- family$dummyfn(x1, ...)
+  x0 <- family$weightfn(x1, weights, ...)
   x <- x0
 
   n <- ncol(x)
@@ -63,7 +66,7 @@ archetypes <- function(data, k, maxIterations = 100,
 
 
   ### Initialization:
-  init <- family$initfn(x, k)
+  init <- family$initfn(x, k, ...)
 
   betas <- init$betas
   alphas <- init$alphas
@@ -72,7 +75,7 @@ archetypes <- function(data, k, maxIterations = 100,
   zs <- x %*% betas
 
   resid <- zs %*% alphas - x
-  rss <- family$normfn(resid) / n
+  rss <- family$normfn(resid, ...) / n
 
   reweights <- rep(1, n)
 
@@ -94,30 +97,30 @@ archetypes <- function(data, k, maxIterations = 100,
   tryCatch(while ( (i <= maxIterations) & (imp >= minImprovement) ) {
 
     ## Reweight data:
-    reweights <- family$reweightsfn(resid, reweights)
-    x <- family$weightfn(x0, reweights)
+    reweights <- family$reweightsfn(resid, reweights, ...)
+    x <- family$weightfn(x0, reweights, ...)
 
 
     ## Alpha's:
-    alphas <- family$alphasfn(alphas, zs, x)
-    zas <- family$zalphasfn(alphas, x)
-    rss1 <- family$normfn(zas %*% alphas - x) / n
+    alphas <- family$alphasfn(alphas, zs, x, ...)
+    zas <- family$zalphasfn(alphas, x, ...)
+    rss1 <- family$normfn(zas %*% alphas - x, ...) / n
 
     kappas[c('alphas', 'zas')] <- c(kappa(alphas), kappa(zas))
 
 
     ## Beta's:
-    betas <- family$betasfn(betas, x, zas)
+    betas <- family$betasfn(betas, x, zas, ...)
     zs <- x %*% betas
 
     kappas[c('betas', 'zs')] <- c(kappa(betas), kappa(zs))
 
 
     ## Residuals, RSS and improvement:
-    alphas0 <- family$alphasfn(alphas, zs, x0)
+    alphas0 <- family$alphasfn(alphas, zs, x0, ...)
 
     resid <- zs %*% alphas0 - x0
-    rss2 <- family$normfn(resid) / n
+    rss2 <- family$normfn(resid, ...) / n
 
     imp <- rss - rss2
     rss <- rss2
@@ -136,19 +139,20 @@ archetypes <- function(data, k, maxIterations = 100,
 
     i <- i + 1
   },
-  error=function(e) errormsg <<- e)
+  error = function(e) errormsg <<- e)
 
 
   ### Check illness:
   if ( !is.null(errormsg) ) {
     warning('k=', k, ': ', errormsg)
-    return(as.archetypes(NULL, k, NULL, NA, iters=i,
-                         call=mycall, history=history, kappas=kappas))
+    return(as.archetypes(NULL, k, NULL, NA, iters = i,
+                         call = mycall, history = history,
+                         kappas = kappas))
   }
 
   if ( any(isIll) )
-    warning('k=', k, ': ', paste(names(isIll)[isIll], collapse=', '),
-            ' > maxKappa', sep='')
+    warning('k=', k, ': ', paste(names(isIll)[isIll], collapse = ', '),
+            ' > maxKappa', sep = '')
 
 
   ### Rescale archetypes, etc.:
@@ -168,8 +172,8 @@ archetypes <- function(data, k, maxIterations = 100,
   return(as.archetypes(t(zs), k, t(alphas), rss, iters = (i-1),
                        call = mycall, history = history, kappas = kappas,
                        betas = t(betas), family = family,
-                       residuals = t(resid), weights = weights,
-                       reweights = reweights))
+                       familyArgs = famargs, residuals = t(resid),
+                       weights = weights, reweights = reweights))
 }
 
 

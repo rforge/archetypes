@@ -15,21 +15,38 @@
 #'           ssleep=0, bsleep=0, postfn=function(iter){}, ...)
 #' @aliases movieplot
 #' @export
-movieplot <- function(zs, data, show=c('atypes', 'adata'),
-                      ssleep=0, bsleep=0, postfn=function(iter){}, ...) {
+movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
+                      ssleep=0, bsleep=0, postfn=function(iter){},
+                      rwdata.col1 = gray(0.7), rwdata.col2 = 2, ...) {
 
+  show <- match.arg(show)
   steps <- length(zs$history)
-  atypesmovie <- ifelse(show[1] == 'atypes', TRUE, FALSE)
 
-  Sys.sleep(ssleep)
+  if ( show == 'rwdata' )
+    data <- zs$family$scalefn(t(data))
 
   # ... and play:
+  Sys.sleep(ssleep)
+
   for ( i in seq_len(steps)-1 ) {
     a <- ahistory(zs, step=i)
-    if ( atypesmovie )
-      plot(a, data, ...)
-    else
-      plot(adata(a), ...)
+
+    switch(show,
+
+           atypes = {
+             plot(a, data, ...)
+           },
+
+           adata = {
+             plot(adata(a), ...)
+           },
+
+           rwdata = {
+             d <- zs$family$weightfn(data, a$reweights)
+
+             plot(t(data), col = rwdata.col1, ...)
+             points(t(d), col = rwdata.col2, ...)
+           })
 
     postfn(i)
 
