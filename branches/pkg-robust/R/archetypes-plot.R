@@ -95,6 +95,9 @@ plot.weightedArchetypes <- function(x, y,
   if ( is.null(link.lty) )
     link.lty <- ifelse(w == 1, 2, 1)
 
+  if ( is.function(data.col) )
+    data.col <- data.col(w)
+
   plot.archetypes(x, y, adata.show = adata.show, data.pch = data.pch,
                   data.col = data.col, data.bg = data.bg(w),
                   link.col = link.col, link.lty = link.lty, ...)
