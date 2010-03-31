@@ -1,64 +1,62 @@
-.v2 <- function(old, new) {
-  warning(sprintf('Function %s is deprecated; please use %s instead.',
-                  sQuote(old), sQuote(new)),
-          call. = FALSE)
-}
+
 
 #' Archetypes getter.
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Archetypes matrix.
 #' @export
+#' @rdname archetypes-deprecated
 atypes <- function(zs, ...) {
+  .Deprecated('parameters')
   UseMethod('atypes')
 }
 
-#' Archetypes getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Archetypes matrix.
-#' @method atypes archetypes
 #' @S3method atypes archetypes
+#' @nord
 atypes.archetypes <- function(zs, ...) {
-  .v2('atypes', 'parameters')
   return(zs$archetypes)
 }
 
+#' @S3method atypes stepArchetypes
+#' @nord
+atypes.stepArchetypes <- function(zs, ...) {
+  return(lapply(zs, atypes))
+}
+
+#' @S3method atypes repArchetypes
+#' @nord
+atypes.repArchetypes <- function(zs, ...) {
+  lapply(zs, atypes)
+}
 
 
 #' Number of archetypes getter.
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
-#' @return Number of archetypes.
+#' @return Archetypes matrix.
 #' @export
+#' @rdname archetypes-deprecated
 ntypes <- function(zs, ...) {
+  .Deprecated('nparameters')
   UseMethod('ntypes')
 }
 
-#' @S3method ntypes archetypes
+#' @S3method atypes archetypes
+#' @nord
 ntypes.archetypes <- function(zs, ...) {
   return(zs$k)
 }
 
-
-
-#' Residual sum of squares getter.
-#' @param zs An \code{archetypes}-related object.
-#' @param ... Further arguments.
-#' @return Residual sum of squares.
-#' @export
-rss <- function(zs, ...) {
-  UseMethod('rss')
+#' @S3method ntypes stepArchetypes
+#' @nord
+ntypes.stepArchetypes <- function(zs, ...) {
+  return(sapply(zs, ntypes))
 }
 
-#' Residual sum of squares getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Residual sum of squares.
-#' @method rss archetypes
-#' @S3method rss archetypes
-rss.archetypes <- function(zs, ...) {
-  return(zs$rss)
+#' @S3method ntypes repArchetypes
+#' @nord
+ntypes.repArchetypes <- function(zs, ...) {
+  ntypes(object[[1]])
 }
 
 
@@ -68,18 +66,15 @@ rss.archetypes <- function(zs, ...) {
 #' @param ... Further arguments.
 #' @return Approximated data matrix.
 #' @export
+#' @rdname archetypes-deprecated
 adata <- function(zs, ...) {
+  .Deprecated('fitted')
   UseMethod('adata')
 }
 
-#' Archetypes data approximation.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Approximated data matrix.
-#' @method adata archetypes
 #' @S3method adata archetypes
+#' @nord
 adata.archetypes <- function(zs, ...) {
-  .v2('adata', 'fitted')
   return(t(t(zs$archetypes) %*% t(zs$alphas)))
 }
 
@@ -90,18 +85,15 @@ adata.archetypes <- function(zs, ...) {
 #' @param ... Further arguments.
 #' @return Alpha matrix.
 #' @export
+#' @rdname archetypes-deprecated
 alphas <- function(zs, ...) {
+  .Deprecated('coef')
   UseMethod('alphas')
 }
 
-#' Alpha getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Alpha matrix.
-#' @method alphas archetypes
 #' @S3method alphas archetypes
+#' @nord
 alphas.archetypes <- function(zs, ...) {
-  .v2('alphas', 'coef')
   return(zs$alphas)
 }
 
@@ -112,18 +104,15 @@ alphas.archetypes <- function(zs, ...) {
 #' @param ... Further arguments.
 #' @return Beta matrix.
 #' @export
+#' @rdname archetypes-deprecated
 betas <- function(zs, ...) {
+  .Deprecated('coef')
   UseMethod('betas')
 }
 
-#' Beta getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Beta matrix.
-#' @method betas archetypes
 #' @S3method betas archetypes
+#' @nord
 betas.archetypes <- function(zs, ...) {
-  .v2('betas', 'coef')
   return(zs$betas)
 }
 
@@ -134,16 +123,14 @@ betas.archetypes <- function(zs, ...) {
 #' @param ... Further arguments.
 #' @return Number of iterations.
 #' @export
+#' @rdname archetypes-deprecated
 iters <- function(zs, ...) {
+  .Deprecated()
   UseMethod('iters')
 }
 
-#' Iteration getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Number of iterations.
-#' @method iters archetypes
 #' @S3method iters archetypes
+#' @nord
 iters.archetypes <- function(zs, ...) {
   return(zs$iters)
 }
@@ -202,13 +189,3 @@ nhistory.archetypes <- function(zs, ...) {
   return(length(zs$history))
 }
 
-
-#' Kappa getter.
-#' @param z An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return A vector of kappas.
-#' @method kappa archetypes
-#' @S3method kappa archetypes
-kappa.archetypes <- function(z, ...) {
-  return(z$kappas)
-}

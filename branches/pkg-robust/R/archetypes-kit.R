@@ -7,7 +7,7 @@
 #' Perform archetypal analysis on a data matrix.
 #' @param data A numeric \eqn{n \times m} data matrix.
 #' @param k The number of archetypes.
-#' @param weights Data weights vector.
+#' @param weights Data weights matrix.
 #' @param maxIterations The maximum number of iterations.
 #' @param minImprovement The minimal value of improvement between two
 #'   iterations.
@@ -30,7 +30,7 @@
 #' @note Please see the vignette for a detailed explanation!
 archetypes <- function(data, k, weights = NULL, maxIterations = 100,
                        minImprovement = sqrt(.Machine$double.eps),
-                       maxKappa = 1000, verbose = TRUE, saveHistory = TRUE,
+                       maxKappa = 1000, verbose = FALSE, saveHistory = TRUE,
                        family = archetypesFamily('original'), ...) {
 
   ### Helpers:
@@ -43,7 +43,7 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
       list(archetypes = as.archetypes(t(family$rescalefn(x, family$undummyfn(x, zs))),
            k, alphas = t(alphas), betas = t(betas), rss = rss, kappas = kappas,
            zas = t(family$rescalefn(x, family$undummyfn(x, zas))),
-           residuals = resid, reweights = reweights,
+           residuals = resid, reweights = reweights, weights = weights,
            family = list(class = family$class)))
   }
 
@@ -155,17 +155,13 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
             ' > maxKappa', sep = '')
 
 
-  ### Rescale archetypes, etc.:
-  if ( !is.null(weights) || !is.null(reweights) ) {
-    alphas <- family$alphasfn(alphas, zs, x1)
-    betas <- family$betasfn(betas, x1, zs)
-  }
+  ### Rescale and recalculate for original data:
+  alphas <- family$alphasfn(alphas, zs, x1)
+  betas <- family$betasfn(betas, x1, zs)
 
-  zs <- family$undummyfn(x, zs)
-  zs <- family$rescalefn(x, zs)
+  zs <- family$undummyfn(x1, zs)
+  zs <- family$rescalefn(x1, zs)
 
-
-  ### Recalculate residuals, etc. for original data:
   resid <- zs %*% alphas - t(data)
 
 

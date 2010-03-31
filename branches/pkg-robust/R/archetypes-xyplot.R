@@ -1,10 +1,22 @@
 
 
+#' Plot of two-dimensional data and archetypes.
+#' @param x An object.
+#' @param ... Further arguments.
+#' @export
+#' @nord
+xyplot <- function(x, ...) {
+  UseMethod('xyplot')
+}
+
+
+
 #' Helper function to calculate the approximated convex hull.
 #' @param zs An \code{archetypes} object.
 #' @return Matrix with the points.
+#' @nord
 ahull <- function(zs) {
-  a <- rbind(atypes(zs), atypes(zs)[1,])
+  a <- rbind(parameters(zs), parameters(zs)[1,])
   xc <- a[,1]; xm <- mean(xc)
   yc <- a[,2]; ym <- mean(yc)
 
@@ -19,7 +31,7 @@ ahull <- function(zs) {
 
 
 
-#' Plot of data and archetypes.
+#' Plot of two-dimensional data and archetypes.
 #' @param x An \code{\link{archetypes}} object.
 #' @param y A matrix or data frame.
 #' @param data.col Color of data points.
@@ -42,21 +54,21 @@ ahull <- function(zs) {
 #' @return Undefined.
 #' @note The link between approximated and original data is based on an
 #'   idea and Matlab source code of Bernard Pailthorpe.
-#' @method plot archetypes
+#' @method xyplot archetypes
 #' @export
-#' @noRd
-plot.archetypes <- function(x, y,
-                            data.col = gray(0.7), data.pch = 19, data.bg = NULL,
-                            atypes.col = 2, atypes.pch = 19,
-                            ahull.show = TRUE, ahull.col = atypes.col,
-                            chull = NULL, chull.col = 1, chull.pch = 19,
-                            adata.show = FALSE, adata.col = 3, adata.pch = 13,
-                            link.col = data.col, link.lty = 1, ...) {
+#' @rdname xyplot
+xyplot.archetypes <- function(x, y,
+                              data.col = 1, data.pch = 19, data.bg = NULL,
+                              atypes.col = 2, atypes.pch = 19,
+                              ahull.show = TRUE, ahull.col = atypes.col,
+                              chull = NULL, chull.col = gray(0.7), chull.pch = 19,
+                              adata.show = FALSE, adata.col = 3, adata.pch = 13,
+                              link.col = data.col, link.lty = 1, ...) {
 
   zs <- x; data <- y;
 
   plot(data, col = data.col, pch = data.pch, bg = data.bg, ...)
-  points(atypes(zs), col = atypes.col, pch = atypes.pch, ...)
+  points(parameters(zs), col = atypes.col, pch = atypes.pch, ...)
 
   if ( !is.null(chull) ) {
     points(data[chull,], col = chull.col, pch = chull.pch, ...)
@@ -69,7 +81,7 @@ plot.archetypes <- function(x, y,
 
   if ( adata.show ) {
     ### Based on an idea of Bernard Pailthorpe.
-    adata <- adata(zs)
+    adata <- fitted(zs)
     link.col <- rep(link.col, length = nrow(adata))
     link.lty <- rep(link.lty, length = nrow(adata))
 
@@ -78,14 +90,21 @@ plot.archetypes <- function(x, y,
       lines(rbind(data[i,], adata[i,]), col = link.col[i],
             lty = link.lty[i], ...)
   }
+
+  invisible(NULL)
 }
 
 
-#' Plot weighted archetypes.
-plot.weightedArchetypes <- function(x, y,
-                                    adata.show = FALSE, data.col = 1, data.pch = 21,
-                                    data.bg = gray, link.col = NULL, link.lty = NULL,
-                                    weights.type = 'weights', ...) {
+
+#' Plot of two-dimensional data and weighted archetypes.
+#' @method xyplot archetypes
+#' @S3method xyplot archetypes
+#' @rdname xyplot
+xyplot.weightedArchetypes <- function(x, y,
+                                      adata.show = FALSE, data.col = 1,
+                                      data.pch = 21, data.bg = gray,
+                                      link.col = NULL, link.lty = NULL,
+                                      weights.type = 'weights', ...) {
 
   w <- 1 - weights(x, type = weights.type)
 
@@ -98,21 +117,25 @@ plot.weightedArchetypes <- function(x, y,
   if ( is.function(data.col) )
     data.col <- data.col(w)
 
-  plot.archetypes(x, y, adata.show = adata.show, data.pch = data.pch,
-                  data.col = data.col, data.bg = data.bg(w),
-                  link.col = link.col, link.lty = link.lty, ...)
+  xyplot.archetypes(x, y, adata.show = adata.show,
+                    data.pch = data.pch, data.col = data.col,
+                    data.bg = data.bg(w), link.col = link.col,
+                    link.lty = link.lty, ...)
 }
 
 
 
-#' Plot robust archetypes.
-plot.robustArchetypes <- function(x, y, ...) {
-  plot.weightedArchetypes(x, y, weights.type = 'reweights', ...)
+#' Plot of two-dimensional data and robust archetypes.
+#' @method xyplot archetypes
+#' @S3method xyplot archetypes
+#' @rdname xyplot
+xyplot.robustArchetypes <- function(x, y, ...) {
+  xyplot.weightedArchetypes(x, y, weights.type = 'reweights', ...)
 }
 
 
 
-#' Plot of data and stepArchetypes.
+#' Plot of two-dimensional data and stepArchetypes.
 #' @param x An \code{\link{stepArchetypes}} object.
 #' @param y A matrix or data frame.
 #' @param data.col Color of data points.
@@ -123,13 +146,14 @@ plot.robustArchetypes <- function(x, y, ...) {
 #' @param ahull.col Color of approximated convex hull line.
 #' @param ... Passed to the underlying plot functions.
 #' @return Undefined.
-#' @method plot stepArchetypes
+#' @method xyplot stepArchetypes
+#' @S3method xyplot stepArchetypes
 #' @export
-#' @noRd
-plot.stepArchetypes <- function(x, y,
-                                data.col=gray(0.7), data.pch=19,
-                                atypes.col=(seq_len(length(x) * length(x[[1]]))+1),
-                                atypes.pch=19, ahull.show=TRUE, ahull.col=atypes.col, ...) {
+#' @rdname xyplot
+xyplot.stepArchetypes <- function(x, y,
+                                  data.col=gray(0.7), data.pch=19,
+                                  atypes.col=(seq_len(length(x) * length(x[[1]]))+1),
+                                  atypes.pch=19, ahull.show=TRUE, ahull.col=atypes.col, ...) {
 
   zs <- x; data <- y;
 
@@ -138,11 +162,13 @@ plot.stepArchetypes <- function(x, y,
   plot(data, col=data.col, pch=data.pch, ...)
   for ( i in seq_along(flatzs) ) {
     a <- flatzs[[i]]
-    points(atypes(a), col=atypes.col[i], pch=atypes.pch, ...)
+    points(parameters(a), col=atypes.col[i], pch=atypes.pch, ...)
 
     if ( ahull.show )
       lines(ahull(a), col=ahull.col[i])
   }
+
+  invisible(NULL)
 }
 
 

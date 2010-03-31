@@ -3,8 +3,29 @@
 
 
 
-### Class and Family:
+#' Weighted archetypes.
+#' @param data A numeric \eqn{n \times m} data matrix.
+#' @param k The number of archetypes.
+#' @param weights Data weights matrix.
+#' @param familyBlocks Exchange predefined family blocks.
+#' @param ... Arguments available for \code{\link{archetypes}}.
+#' @return An object of class \code{weightedArchetypes}and
+#'   \code{\link{archetypes}}.
+#' @export
+#' @rdname archetypes
+weightedArchetypes <- function(data, k, weights = NULL,
+                               familyBlocks = list(), ...) {
 
+  family <- do.call(archetypesFamily, c(list('weighted'), familyBlocks))
+
+  archetypes(data, k, weights = weights, family = family, ...)
+}
+
+
+
+#' Weighted family constructor helper.
+#' @return A list of blocks.
+#' @nord
 .weighted.archetypesFamily <- function() {
   f <- .original.archetypesFamily()
   f$class <- 'weightedArchetypes'
@@ -16,9 +37,6 @@ setOldClass('weightedArchetypes')
 
 
 
-### Methods:
-
 #' @importFrom modeltools parameters
+#' @nord
 setMethod('parameters', 'weightedArchetypes', parameters.archetypes)
-
-

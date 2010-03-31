@@ -1,10 +1,11 @@
 
 
-### Scaling and rescaling functions:
+### Scaling and rescaling functions: #################################
 
 #' Scaling block: standardize to mean 0 and standard deviation 1.
 #' @param x Data matrix.
 #' @return Standardized data matrix with some attribues.
+#' @nord
 std.scalefn <- function(x, ...) {
   m = rowMeans(x)
   x = x - m
@@ -21,6 +22,7 @@ std.scalefn <- function(x, ...) {
 #' @param x Standardized data matrix.
 #' @param zs Archetypes matrix
 #' @return Rescaled archetypes.
+#' @nord
 std.rescalefn <- function(x, zs, ...) {
 
   m = attr(x, '.Meta')$mean
@@ -37,6 +39,7 @@ std.rescalefn <- function(x, zs, ...) {
 #' Scaling block: no scaling.
 #' @param x Data matrix.
 #' @return Data matrix.
+#' @nord
 no.scalefn <- function(x, ...) {
   return(x)
 }
@@ -45,19 +48,21 @@ no.scalefn <- function(x, ...) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
+#' @nord
 no.rescalefn <- function(x, zs, ...) {
   return(zs)
 }
 
 
 
-### Dummy and undummy functions:
+### Dummy and undummy functions: #####################################
 
-#' Dummy block: generator for a dummy function which adds a row containing
-#' a huge value.
+#' Dummy block: generator for a dummy function which adds a row
+#'   containing a huge value.
 #' @param huge The value.
-#' @return A function which takes a data matrix and returns the data matrix
-#'   with an additonal row containing \code{huge} values.
+#' @return A function which takes a data matrix and returns the
+#'   data matrix with an additonal row containing \code{huge} values.
+#' @nord
 make.dummyfn <- function(huge=200) {
 
   bp.dummyfn <- function(x, ...) {
@@ -77,6 +82,7 @@ make.dummyfn <- function(huge=200) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
+#' @nord
 rm.undummyfn <- function(x, zs, ...) {
   dr = attr(x, '.Meta')$dummyrow
 
@@ -87,6 +93,7 @@ rm.undummyfn <- function(x, zs, ...) {
 #' Dummy block: no dummy row.
 #' @param x Data matrix.
 #' @return Data matrix x.
+#' @nord
 no.dummyfn <- function(x, ...) {
   return(x)
 }
@@ -95,18 +102,21 @@ no.dummyfn <- function(x, ...) {
 #' @param x Data matrix.
 #' @param zs Archetypes matrix.
 #' @return Archetypes zs.
+#' @nord
 no.undummyfn <- function(x, zs, ...) {
   return(zs)
 }
 
 
 
-### `From X and alpha to archetypes` functions:
+### `From X and alpha to archetypes` functions: ######################
+
 
 #' X to alpha block: QR approach.
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
+#' @nord
 qrsolve.zalphasfn <- function(alphas, x, ...) {
   return(t(qr.solve(alphas %*% t(alphas)) %*% alphas %*% t(x)))
 }
@@ -117,6 +127,7 @@ qrsolve.zalphasfn <- function(alphas, x, ...) {
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
+#' @nord
 ginv.zalphasfn <- function(alphas, x, ...) {
   require(MASS)
 
@@ -129,6 +140,7 @@ ginv.zalphasfn <- function(alphas, x, ...) {
 #' @param alphas The coefficients.
 #' @param x Data matrix.
 #' @return The solved linear system.
+#' @nord
 opt.zalphasfn <- function(alphas, x, ...) {
   z <- rnorm(nrow(x)*nrow(alphas))
 
@@ -145,13 +157,15 @@ opt.zalphasfn <- function(alphas, x, ...) {
 
 
 
-### Alpha calculation functions:
+### Alpha calculation functions: #####################################
+
 
 #' Alpha block: plain nnls.
 #' @param coefs The coefficients alpha.
 #' @param C The archetypes matrix.
 #' @param d The data matrix.
 #' @return Recalculated alpha.
+#' @nord
 nnls.alphasfn <- function(coefs, C, d, ...) {
   require(nnls)
 
@@ -168,6 +182,7 @@ nnls.alphasfn <- function(coefs, C, d, ...) {
 #' @param C The archetypes matrix.
 #' @param d The data matrix.
 #' @return Recalculated alpha.
+#' @nord
 snnls.alphasfn <- function(coefs, C, d, ...) {
   require(nnls)
 
@@ -188,7 +203,7 @@ snnls.alphasfn <- function(coefs, C, d, ...) {
 
 
 
-### Beta calculation functions:
+### Beta calculation functions: ######################################
 
 
 #' Beta block: plain nnls.
@@ -196,6 +211,7 @@ snnls.alphasfn <- function(coefs, C, d, ...) {
 #' @param C The data matrix.
 #' @param d The archetypes matrix.
 #' @return Recalculated beta.
+#' @nord
 nnls.betasfn <- nnls.alphasfn
 
 
@@ -205,16 +221,18 @@ nnls.betasfn <- nnls.alphasfn
 #' @param C The data matrix.
 #' @param d The archetypes matrix.
 #' @return Recalculated beta.
+#' @nord
 snnls.betasfn <- snnls.alphasfn
 
 
 
-### Norm functions:
+### Norm functions: ##################################################
 
 
 #' Norm block: standard matrix norm (spectral norm).
 #' @param m Matrix.
 #' @return The norm.
+#' @nord
 norm2.normfn <- function(m, ...) {
   return(max(svd(m)$d))
 }
@@ -223,17 +241,20 @@ norm2.normfn <- function(m, ...) {
 #' Norm block: euclidian norm.
 #' @param m Matrix.
 #' @return The norm.
+#' @nord
 euc.normfn <- function(m, ...) {
   return(sum(apply(m, 2, function(x){sqrt(sum(x^2))})))
 }
 
 
 
-### Archetypes initialization functions:
+### Archetypes initialization functions: #############################
+
 
 #' Init block: generator for random initializtion.
 #' @param k The proportion of beta for each archetype.
 #' @return A function which returns a list with alpha and beta.
+#' @nord
 make.random.initfn <- function(k) {
 
   bp.initfn <- function(x, p, ...) {
@@ -255,6 +276,7 @@ make.random.initfn <- function(k) {
 #' Init block: generator for fix initializtion.
 #' @param indizes The indizies of data points to use as archetypes.
 #' @return A function which returns a list with alpha and beta.
+#' @nord
 make.fix.initfn <- function(indizes) {
 
   fix.initfn <- function(x, p, ...) {
@@ -273,12 +295,14 @@ make.fix.initfn <- function(indizes) {
 
 
 
-### Weighting functions:
+### Weight functions: ################################################
 
-#' Weighting function: move data closer to global center
+
+#' Weight function: move data closer to global center
 #' @param data A numeric \eqn{m \times n} data matrix.
 #' @param weights Vector of data weights within \eqn{[0, 1]}.
 #' @return Weighted data matrix.
+#' @nord
 center.weightfn <- function(data, weights, ...) {
   if ( is.null(weights) )
     return(data)
@@ -301,8 +325,14 @@ center.weightfn <- function(data, weights, ...) {
 
 
 
-### Reweighting functions:
+### Reweights functions: #############################################
 
+
+#' Reweights function: calculate Bisquare reweights.
+#' @param resid A numeric \eqn{m \times n} data matrix.
+#' @param reweights Vector of data reweights within \eqn{[0, 1]}.
+#' @return Reweights vector.
+#' @nord
 bisquare0.reweightsfn <- function(resid, reweights, ...) {
   resid <- apply(resid, 2, function(x) sum(abs(x)))
   resid0 <- resid < sqrt(.Machine$double.eps)
@@ -314,65 +344,32 @@ bisquare0.reweightsfn <- function(resid, reweights, ...) {
 }
 
 
+
+#' Reweights function: calculate binary Bisquare reweights.
+#' @param resid A numeric \eqn{m \times n} data matrix.
+#' @param reweights Vector of data reweights within \eqn{[0, 1]}.
+#' @param threshold Threshold for binarization.
+#' @return Reweights vector.
+#' @nord
 binary.bisquare0.reweightsfn <- function(resid, reweights,
-                                         cutpoint = 0.1, ...) {
+                                         threshold = 0.1, ...) {
   rw <- bisquare0.reweightsfn(resid, reweights, ...)
   ifelse(rw < cutpoint, 0, 1)
 }
 
 
-bisquare.reweightsfn <- function(resid, reweights, ...) {
-  resid.abs <- apply(resid, 2, function(x) sum(abs(x)))
 
-  mar <- mad(resid.abs, constant = 1) / 0.6754
-  k <- 4.685 * mar
+### Archetypes family: ###############################################
 
-  resid.euc <- apply(resid / k, 2, function(x) sum(x^2))
-
-  ifelse(resid.abs <= k, (1 - resid.euc)^2, 0)
-}
-
-tricube.reweightsfn <- function(resid, reweights, ...) {
-  resid <- apply(resid, 2, function(x) sum(abs(x)))
-  ifelse(resid < 1, (1 - resid^3)^3, 0)
-}
-
-leastwise.tricube.reweightsfn <- function(resid, reweights,
-                                          nperc = 0.8, minrw = 0.3, ...) {
-
-  resid <- apply(resid, 2, function(x) sum(abs(x)))
-  resid0 <- resid < sqrt(.Machine$double.eps)
-  resido <- order(resid)
-
-  n0 <- ceiling(sum(!resid0) * nperc)
-
-  ix <- resido[!resid0][seq(length = n0)]
-
-  rw <- ifelse(resid < 1, (1 - resid^3)^3, 0)
-  rw[ix] <- ifelse(rw[ix] < minrw, minrw, rw[ix])
-
-  rw
-}
-
-
-binary.tricube.reweightsfn <- function(resid, reweights,
-                                       cutpoint = 0.1, ...) {
-  rw <- tricube.reweightsfn(resid, reweights, ...)
-  ifelse(rw < cutpoint, 0, 1)
-}
-
-
-
-### Archetypes family:
 
 #' Archetypes family constructor.
 #'
-#' This function returns a problem solving brick for each of the different
-#' conceptual parts of the algorithm. Currently, only the 'original' family
-#' is supported.
+#' This function returns a problem solving block for each of the
+#' different conceptual parts of the algorithm.
 #'
 #' @param which The kind of archetypes family.
-#' @param ... Exchange blocks predefined by the kind of family.
+#' @param ... Exchange predefined family blocks with self-defined
+#'            functions.
 #' @return A list containing a function for each of the different parts.
 #' @seealso \code{\link{archetypes}}
 #' @export
@@ -397,6 +394,11 @@ archetypesFamily <- function(which = c('original', 'weighted', 'robust'), ...) {
   family
 }
 
+
+
+#' Original family constructor helper.
+#' @return A list of blocks.
+#' @nord
 .original.archetypesFamily <- function() {
   list(normfn = norm2.normfn,
        scalefn = std.scalefn,
@@ -408,7 +410,7 @@ archetypesFamily <- function(which = c('original', 'weighted', 'robust'), ...) {
        betasfn = nnls.betasfn,
        zalphasfn = qrsolve.zalphasfn,
        weightfn = function(x, weights) x,
-       reweightsfn = function(x, weights) NULL,
+       reweightsfn = function(x, weights) weights,
        class = NULL)
 }
 

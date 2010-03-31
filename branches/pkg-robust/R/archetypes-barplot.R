@@ -18,7 +18,9 @@ barplot.archetypes <- function(height, data,
                                which = c('below', 'beside'),
                                which.beside = c('atypes', 'variables'),
                                which.below = c('compressed', 'default'),
-                               percentiles = FALSE, ...) {
+                               percentiles = FALSE,
+                               below.compressed.height = 0.1,
+                               below.compressed.srt = 0, ...) {
 
   ### Helpers:
   .beside.atypes <- function() {
@@ -43,17 +45,20 @@ barplot.archetypes <- function(height, data,
 
   .below.compressed <- function() {
     p <- nrow(atypes) + 1
+    heights <- c(rep(1, p - 1), below.compressed.height)
 
-    layout(matrix(1:p, nrow = p, byrow = TRUE))
+    layout(matrix(1:p, nrow = p, byrow = TRUE),
+           heights = heights)
     for ( i in 1:(p - 1) ) {
       par(mar = c(0, 5, 1, 0) + 0.1)
-      x.at <- barplot(atypes[i,], ylab=ylab, ylim=ylim,
-                      names.arg='', las=2, ...)
+      x.at <- barplot(atypes[i,], ylab = ylab, ylim = ylim,
+                      names.arg = '', las = 2, ...)
       mtext(sprintf('Archetype %s', i), side = 2, line = 4,
             cex = par('cex'))
     }
-    text(x.at, par("usr")[3] - 1, srt = 90, adj = 1,
-         labels = colnames(atypes), xpd = NA)
+
+    text(x.at, par("usr")[3] - 3, srt = below.compressed.srt,
+         adj = 1, labels = colnames(atypes), xpd = NA)
   }
 
 
@@ -74,7 +79,7 @@ barplot.archetypes <- function(height, data,
   else
     which.arg <- match.arg(which.below)
 
-  atypes <- atypes(height)
+  atypes <- parameters(height)
   rownames(atypes) <- sprintf('Archetype %s',
                               seq(length = nrow(atypes)))
 

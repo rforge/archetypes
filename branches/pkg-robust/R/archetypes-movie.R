@@ -1,6 +1,6 @@
 
 
-#' Archetypes plot movie.
+#' Archetypes movies.
 #' @param zs An \code{\link{archetypes}} object.
 #' @param data The data matrix.
 #' @param show Show archetypes or approximated data.
@@ -10,9 +10,6 @@
 #'   iteration after the plot call.
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
-#' @usage
-#' movieplot(zs, data, show=c('atypes', 'adata'),
-#'           ssleep=0, bsleep=0, postfn=function(iter){}, ...)
 #' @aliases movieplot
 #' @export
 movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
@@ -34,7 +31,7 @@ movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
     switch(show,
 
            atypes = {
-             plot(a, data, ...)
+             xyplot(a, data, ...)
            },
 
            adata = {
@@ -70,6 +67,7 @@ movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
 #' @export
+#' @rdname movieplot
 movieplot2 <- function(zs, data, show='atypes',
                        ssleep=0, bsleep=0,
                        zas.col=2, zas.pch=13,
@@ -89,14 +87,14 @@ movieplot2 <- function(zs, data, show='atypes',
     a0 <- ahistory(zs, step=(i-1))
     a <- ahistory(zs, step=i)
 
-    plot(a0, data, atypes.col=old.col, ...)
+    xyplot(a0, data, atypes.col=old.col, ...)
     points(a$zas, col=zas.col, pch=zas.pch, ...)
     Sys.sleep(bsleep)
 
-    plot(a0, data, atypes.col=old.col, ...)
+    xyplot(a0, data, atypes.col=old.col, ...)
     points(a$zas, col=zas.col, pch=zas.pch, ...)
     par(new=TRUE)
-    plot(a, data, ...)
+    xyplot(a, data, ...)
     Sys.sleep(bsleep)
   }
 
@@ -113,6 +111,7 @@ movieplot2 <- function(zs, data, show='atypes',
 #' @param ... Passed to underlying pcplot functions.
 #' @return Undefined.
 #' @export
+#' @rdname movieplot
 moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
                         ssleep=0, bsleep=0, ...) {
 
