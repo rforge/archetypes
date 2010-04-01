@@ -32,11 +32,19 @@ robustArchetypes <- function(data, k, familyBlocks = list(), ...) {
   f
 }
 
+
+
 setOldClass('robustArchetypes')
 
 
 
+#' Return fitted archetypes.
+#' @param object An \code{robustArchetypes} object.
+#' @param ... Ignored.
+#' @return Matrix with \eqn{k} archetypes.
 #' @importFrom modeltools parameters
 #' @nord
-setMethod('parameters', 'robustArchetypes', parameters.archetypes)
+setMethod('parameters',
+          signature = signature(object = 'robustArchetypes'),
+          .parameters.archetypes)
 

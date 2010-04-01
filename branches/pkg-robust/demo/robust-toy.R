@@ -21,6 +21,7 @@ set.seed(1986)
 a <- archetypes(toy, 3)
 
 a
+parameters(a)
 barplot(a, toy, percentiles = TRUE)
 
 
@@ -120,6 +121,7 @@ set.seed(1234)
 ra <- robustArchetypes(toy.o1, 3)
 
 ra
+parameters(ra)
 barplot(ra, toy.o1, percentiles = TRUE)
 
 

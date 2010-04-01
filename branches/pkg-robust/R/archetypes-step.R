@@ -54,6 +54,11 @@ stepArchetypes <- function(..., k, nrep = 3, method = archetypes, verbose = TRUE
 
 
 
+setOldClass('repArchetypes')
+setOldClass('stepArchetypes')
+
+
+
 #' Extract method.
 #'
 #' An extraction on a \code{stepArchetypes} object returns again a
@@ -109,16 +114,24 @@ summary.stepArchetypes <- function(object, ...) {
 
 
 
-#' Archetypes getter.
+#' Return fitted archetypes.
 #' @param object A \code{stepArchetypes} object.
 #' @param ... Ignored.
 #' @return A list of archetypes matrices.
-#' @method parameters stepArchetypes
-#' @S3method parameters stepArchetypes
-#' @rdname stepArchetypes
-parameters.stepArchetypes <- function(object, ...) {
+#' @nord
+.parameters.stepArchetypes <- function(object, ...) {
   return(lapply(object, parameters))
 }
+
+#' Return fitted archetypes.
+#' @param object An \code{stepArchetypes} object.
+#' @param ... Ignored.
+#' @return List of archetypes.
+#' @importFrom modeltools parameters
+#' @nord
+setMethod('parameters',
+          signature = signature(object = 'stepArchetypes'),
+          .parameters.stepArchetypes)
 
 
 
@@ -194,16 +207,24 @@ print.repArchetypes <- function(x, ...) {
 
 
 
-#' Archetypes getter.
+#' Return fitted archetypes.
 #' @param object A \code{repArchetypes} object.
 #' @param ... Ignored.
 #' @return A list of archetypes matrices.
-#' @method parameters repArchetypes
-#' @S3method parameters repArchetypes
 #' @nord
-parameters.repArchetypes <- function(object, ...) {
+.parameters.repArchetypes <- function(object, ...) {
   lapply(object, atypes)
 }
+
+#' Return fitted archetypes.
+#' @param object An \code{repArchetypes} object.
+#' @param ... Ignored.
+#' @return List of archetypes.
+#' @importFrom modeltools parameters
+#' @nord
+setMethod('parameters',
+          signature = signature(object = 'repArchetypes'),
+          .parameters.repArchetypes)
 
 
 

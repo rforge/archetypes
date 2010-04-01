@@ -46,6 +46,8 @@ as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
                    class = c(family$class, 'archetypes')))
 }
 
+
+
 setOldClass('archetypes')
 
 
@@ -87,16 +89,20 @@ fitted.archetypes <- function(object, ...) {
 #' @param object An \code{archetypes} object.
 #' @param ... Ignored.
 #' @return Matrix with \eqn{k} archetypes.
-#' @method parameters archetypes
-#' @S3method parameters archetypes
-#' @rdname archetypes-class
-parameters.archetypes <- function(object, ...) {
+#' @nord
+.parameters.archetypes <- function(object, ...) {
   object$archetypes
 }
 
+#' Return fitted archetypes.
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Matrix with \eqn{k} archetypes.
 #' @importFrom modeltools parameters
-#' @nord
-setMethod('parameters', 'archetypes', parameters.archetypes)
+#' @rdname archetypes-class
+setMethod('parameters',
+          signature = signature(object = 'archetypes'),
+          .parameters.archetypes)
 
 
 

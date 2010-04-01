@@ -33,10 +33,18 @@ weightedArchetypes <- function(data, k, weights = NULL,
   f
 }
 
+
+
 setOldClass('weightedArchetypes')
 
 
 
+#' Return fitted archetypes.
+#' @param object An \code{weightedArchetypes} object.
+#' @param ... Ignored.
+#' @return Matrix with \eqn{k} archetypes.
 #' @importFrom modeltools parameters
 #' @nord
-setMethod('parameters', 'weightedArchetypes', parameters.archetypes)
+setMethod('parameters',
+          signature = signature(object = 'weightedArchetypes'),
+          .parameters.archetypes)
