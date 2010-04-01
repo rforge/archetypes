@@ -1,10 +1,11 @@
 
 
-#' Generic function for panorama plot.
+#' Panorama plot.
 #' @param object An object.
 #' @param ... Further arguments.
+#' @return Undefined.
 #' @export
-#' @nord
+#' @rdname archetypes-generics
 panorama <- function(object, ...) {
   UseMethod('panorama')
 }
@@ -23,16 +24,26 @@ panorama <- function(object, ...) {
 #' @param cex magnification of the distances.
 #' @param atypes.col Color of archetype distances.
 #' @param atypes.pch Plot character of archetype distances.
-#' @param atypes.cex magnification of the archetype distances.
+#' @param atypes.cex Magnification of the archetype distances.
+#' @param ylim The y limits of the plot.
 #' @param ... Passed to the underlying \code{plot} call.
 #' @S3method panorama archetypes
 #' @method panorama archetypes
+#' @examples
+#'   \dontrun{
+#'   data(toy)
+#'   a <- archetypes(toy, 3)
+#'   panorama(a, toy)
+#'
+#'   ## See demo(robust-ozone).
+#'   }
 panorama.archetypes <- function(object, data, distfn = distEuclidean,
                                 xlab = 'Index', ylab = 'Distance',
                                 order = TRUE, col = 1, pch = 1, cex = 1,
                                 atypes.col = (seq(length = nparameters(object)) + 1),
                                 atypes.pch = rep(19, nparameters(object)),
-                                atypes.cex = rep(1, nparameters(object)), ylim = NULL, ...) {
+                                atypes.cex = rep(1, nparameters(object)),
+                                ylim = NULL, ...) {
 
   n1 <- nrow(data)
   n2 <- nparameters(object)

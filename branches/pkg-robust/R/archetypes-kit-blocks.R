@@ -354,7 +354,7 @@ bisquare0.reweightsfn <- function(resid, reweights, ...) {
 binary.bisquare0.reweightsfn <- function(resid, reweights,
                                          threshold = 0.1, ...) {
   rw <- bisquare0.reweightsfn(resid, reweights, ...)
-  ifelse(rw < cutpoint, 0, 1)
+  ifelse(rw < threshold, 0, 1)
 }
 
 

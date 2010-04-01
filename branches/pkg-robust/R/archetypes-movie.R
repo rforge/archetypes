@@ -8,16 +8,18 @@
 #' @param bsleep Seconds to sleep between each plot.
 #' @param postfn Post plot function; is called in each
 #'   iteration after the plot call.
+#' @param rwdata.col1 If \code{show = 'rwdata'}: color of base data set.
+#' @param rwdata.col2 If \code{show = 'rwdata'}: color of weighted data set.
 #' @param ... Passed to underlying plot functions.
 #' @return Undefined.
 #' @aliases movieplot
 #' @export
-movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
-                      ssleep=0, bsleep=0, postfn=function(iter){},
+movieplot <- function(zs, data, show = c('atypes', 'adata', 'rwdata'),
+                      ssleep = 0, bsleep = 0, postfn = function(iter){},
                       rwdata.col1 = gray(0.7), rwdata.col2 = 2, ...) {
 
   show <- match.arg(show)
-  steps <- length(zs$history)
+  steps <- length(zs$history$states())
 
   if ( show == 'rwdata' )
     data <- zs$family$scalefn(t(data))
@@ -26,18 +28,15 @@ movieplot <- function(zs, data, show=c('atypes', 'adata', 'rwdata'),
   Sys.sleep(ssleep)
 
   for ( i in seq_len(steps)-1 ) {
-    a <- ahistory(zs, step=i)
+    a <- zs$history$get(i)[[1]]
 
     switch(show,
-
            atypes = {
              xyplot(a, data, ...)
            },
-
            adata = {
              plot(adata(a), ...)
            },
-
            rwdata = {
              d <- zs$family$weightfn(data, a$reweights)
 
@@ -73,22 +72,22 @@ movieplot2 <- function(zs, data, show='atypes',
                        zas.col=2, zas.pch=13,
                        old.col=rgb(1,0.5,0.5), ...) {
 
-  steps <- length(zs$history)
+  steps <- length(zs$history$states())
 
   Sys.sleep(ssleep)
 
   # Initial archetypes:
-  a <- ahistory(zs, step=0)
+  a <- zs$history$get(0)[[1]]
   plot(a, data, ...)
   Sys.sleep(bsleep)
 
   # Alternating loop:
   for ( i in seq_len(steps-1) ) {
-    a0 <- ahistory(zs, step=(i-1))
-    a <- ahistory(zs, step=i)
+    a0 <- zs$history$get(i-1)[[1]]
+    a <- zs$history$get(i)[[1]]
 
-    xyplot(a0, data, atypes.col=old.col, ...)
-    points(a$zas, col=zas.col, pch=zas.pch, ...)
+    xyplot(a0, data, atypes.col = old.col, ...)
+    points(a$zas, col = zas.col, pch = zas.pch, ...)
     Sys.sleep(bsleep)
 
     xyplot(a0, data, atypes.col=old.col, ...)
@@ -115,7 +114,7 @@ movieplot2 <- function(zs, data, show='atypes',
 moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
                         ssleep=0, bsleep=0, ...) {
 
-  steps <- length(zs$history)
+  steps <- length(zs$history$states())
   atypesmovie <- ifelse(show[1] == 'atypes', TRUE, FALSE)
   rx <- apply(data, 2, range, na.rm=TRUE)
 
@@ -123,7 +122,7 @@ moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
 
   # ... and play:
   for ( i in seq_len(steps)-1 ) {
-    a <- ahistory(zs, step=i)
+    a <- zs$history$get(i)
 
     if ( atypesmovie )
       pcplot(a, data, ...)

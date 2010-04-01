@@ -1,10 +1,10 @@
 
 
-#' Generic function for parallel coordinates plot.
+#' Parallel coordinates plot.
 #' @param x An object.
 #' @param ... Further arguments.
 #' @export
-#' @noRd
+#' @rdname archetypes-generics
 pcplot <- function(x, ...) {
   UseMethod('pcplot')
 }
@@ -71,7 +71,7 @@ pcplot.default <- function (x, col=gray(0.7), lty=1, var.label=TRUE,
 #' @param lty Line types.
 #' @param ... Passed to underlying \code{\link[graphics]{matlines}}.
 #' @return Undefined.
-#' @nord
+#' @rdname pcplot
 lines.pcplot <- function(x, data, col=1, lty=1, ...) {
   rx <- apply(data, 2, range, na.rm=TRUE)
 

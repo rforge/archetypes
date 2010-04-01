@@ -7,8 +7,9 @@
 #'    \code{beside} creates one barplot with bars side by side.
 #' @param which.beside Barplot according to \code{atypes} or \code{variables}.
 #' @param which.below \code{compressed} plots the labels only once.
-#' @param percentage Show real values or percentages according to the
-#'    original data.
+#' @param percentiles Show real values or percentile profiles.
+#' @param below.compressed.height Height of additional tail subplot.
+#' @param below.compressed.srt Rotations of the x-labels.
 #' @param ... Passed to the underlying \code{\link{barplot}} call.
 #' @return Undefined.
 #' @method barplot archetypes

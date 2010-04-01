@@ -1,10 +1,10 @@
-Package: archetypes.dev.robust
+Package: archetypes
 Type: Package
 Title: Archetypal Analysis
-Version: 1.0
-Date: 2009-04-23
-Depends: nnls (>= 1.1), modeltools
-Suggests: MASS, vcd
+Version: 2.0
+Date: 2010-04-01
+Depends: methods, modeltools, nnls (>= 1.1)
+Suggests: MASS, vcd, mlbench
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Description: The main function archetypes implements a framework for

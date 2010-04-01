@@ -1,10 +1,11 @@
 
 
-#' Plot of two-dimensional data and archetypes.
+#' Two-dimensional plot.
 #' @param x An object.
 #' @param ... Further arguments.
+#' @return Undefined.
 #' @export
-#' @nord
+#' @rdname archetypes-generics
 xyplot <- function(x, ...) {
   UseMethod('xyplot')
 }
@@ -36,6 +37,7 @@ ahull <- function(zs) {
 #' @param y A matrix or data frame.
 #' @param data.col Color of data points.
 #' @param data.pch Type of data points.
+#' @param data.bg Background of data points.
 #' @param atypes.col Color of archetypes points.
 #' @param atypes.pch Type of archetypes points.
 #' @param ahull.show Show approximated convex hull.
@@ -50,6 +52,8 @@ ahull <- function(zs) {
 #' @param adata.pch Type of approximated data points.
 #' @param link.col Color of link between approximated and original data
 #'   points.
+#' @param link.lty Line type of link between approximated and original
+#'    data points.
 #' @param ... Passed to the underlying plot functions.
 #' @return Undefined.
 #' @note The link between approximated and original data is based on an
@@ -97,11 +101,21 @@ xyplot.archetypes <- function(x, y,
 
 
 #' Plot of two-dimensional data and weighted archetypes.
-#' @method xyplot archetypes
-#' @S3method xyplot archetypes
+#' @param x An \code{\link{archetypes}} object.
+#' @param y A matrix or data frame.
+#' @param data.col Color of data points.
+#' @param data.pch Type of data points.
+#' @param data.bg Background of data points.
+#' @param link.col Color of link between approximated and original data
+#'   points.
+#' @param link.lty Line type of link between approximated and original
+#'    data points.
+#' @param weights.type Weights to display; see \code{\link{weights.archetypes}}.
+#' @param ... Arguments of \code{\link{xyplot.archetypes}}.
+#' @method xyplot weightedArchetypes
+#' @S3method xyplot weightedArchetypes
 #' @rdname xyplot
-xyplot.weightedArchetypes <- function(x, y,
-                                      adata.show = FALSE, data.col = 1,
+xyplot.weightedArchetypes <- function(x, y, data.col = 1,
                                       data.pch = 21, data.bg = gray,
                                       link.col = NULL, link.lty = NULL,
                                       weights.type = 'weights', ...) {
@@ -117,17 +131,20 @@ xyplot.weightedArchetypes <- function(x, y,
   if ( is.function(data.col) )
     data.col <- data.col(w)
 
-  xyplot.archetypes(x, y, adata.show = adata.show,
-                    data.pch = data.pch, data.col = data.col,
-                    data.bg = data.bg(w), link.col = link.col,
-                    link.lty = link.lty, ...)
+  xyplot.archetypes(x, y, data.pch = data.pch,
+                    data.col = data.col, data.bg = data.bg(w),
+                    link.col = link.col, link.lty = link.lty, ...)
 }
 
 
 
 #' Plot of two-dimensional data and robust archetypes.
-#' @method xyplot archetypes
-#' @S3method xyplot archetypes
+#' @param x An \code{\link{archetypes}} object.
+#' @param y A matrix or data frame.
+#' @param ... Arguments of \code{\link{xyplot.weightedArchetypes}} and
+#'   \code{\link{xyplot.robustArchetypes}}
+#' @method xyplot robustArchetypes
+#' @S3method xyplot robustArchetypes
 #' @rdname xyplot
 xyplot.robustArchetypes <- function(x, y, ...) {
   xyplot.weightedArchetypes(x, y, weights.type = 'reweights', ...)

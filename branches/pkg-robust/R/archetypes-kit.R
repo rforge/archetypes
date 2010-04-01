@@ -37,14 +37,15 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
   mycall <- match.call()
   famargs <- list(...)
 
-  history <- NULL
+  memento <- NULL
   snapshot <- function(i) {
-    history[[sprintf('s%s', i)]] <-
-      list(archetypes = as.archetypes(t(family$rescalefn(x, family$undummyfn(x, zs))),
-           k, alphas = t(alphas), betas = t(betas), rss = rss, kappas = kappas,
-           zas = t(family$rescalefn(x, family$undummyfn(x, zas))),
-           residuals = resid, reweights = reweights, weights = weights,
-           family = list(class = family$class)))
+    a <- list(archetypes = as.archetypes(t(family$rescalefn(x, family$undummyfn(x, zs))),
+              k, alphas = t(alphas), betas = t(betas), rss = rss, kappas = kappas,
+              zas = t(family$rescalefn(x, family$undummyfn(x, zas))),
+              residuals = resid, reweights = reweights, weights = weights,
+              family = list(class = family$class)))
+
+    memento$save(i, a)
   }
 
   printIter <- function(i) {
@@ -85,7 +86,7 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
   errormsg <- NULL
 
   if ( saveHistory ) {
-    history <- new.env(parent=emptyenv())
+    memento <- new.memento()
     snapshot(0)
   }
 
@@ -166,7 +167,7 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
 
 
   return(as.archetypes(t(zs), k, t(alphas), rss, iters = (i-1),
-                       call = mycall, history = history, kappas = kappas,
+                       call = mycall, history = memento, kappas = kappas,
                        betas = t(betas), family = family,
                        familyArgs = famargs, residuals = t(resid),
                        weights = weights, reweights = reweights))

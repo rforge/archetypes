@@ -117,7 +117,7 @@ summary.stepArchetypes <- function(object, ...) {
 #' @S3method parameters stepArchetypes
 #' @rdname stepArchetypes
 parameters.stepArchetypes <- function(object, ...) {
-  return(lapply(zs, parameters))
+  return(lapply(object, parameters))
 }
 
 
@@ -130,38 +130,38 @@ parameters.stepArchetypes <- function(object, ...) {
 #' @S3method nparameters stepArchetypes
 #' @rdname stepArchetypes
 nparameters.stepArchetypes <- function(object, ...) {
-  return(sapply(zs, nparameters))
+  return(sapply(object, nparameters))
 }
 
 
 
 #' Archetypes residual sum of squares getter.
-#' @param zs A \code{stepArchetypes} object.
+#' @param object A \code{stepArchetypes} object.
 #' @param ... Ignored.
 #' @return A vector of residual sum of squares.
 #' @method rss stepArchetypes
 #' @S3method rss stepArchetypes
 #' @rdname stepArchetypes
-rss.stepArchetypes <- function(zs, ...) {
-  ret <- t(sapply(zs, rss))
-  rownames(ret) <- paste('k', ntypes(zs), sep='')
+rss.stepArchetypes <- function(object, ...) {
+  ret <- t(sapply(object, rss))
+  rownames(ret) <- paste('k', nparameters(object), sep='')
   return(ret)
 }
 
 
 
 #' Best model getter.
-#' @param object An \code{\link{stepArchetypes}} object.
+#' @param object An object.
 #' @param ... Further arguments.
-#' @return A list of length \code{k} of best models.
+#' @return The best models.
 #' @export
-#' @nord
+#' @rdname archetypes-generics
 bestModel <- function(object, ...) {
   UseMethod('bestModel')
 }
 
 #' \code{stepArchetypes} best model getter.
-#' @param zs A \code{stepArchetypes} object.
+#' @param object A \code{stepArchetypes} object.
 #' @param ... Ignored.
 #' @return A list of length \code{k} of best models.
 #' @method bestModel stepArchetypes
@@ -208,14 +208,14 @@ parameters.repArchetypes <- function(object, ...) {
 
 
 #' Archetypes residual sum of squares getter.
-#' @param zs A \code{repArchetypes} object.
+#' @param object A \code{repArchetypes} object.
 #' @param ... Ignored.
 #' @return A vector of residual sum of squares.
 #' @method rss repArchetypes
 #' @S3method rss repArchetypes
 #' @nord
-rss.repArchetypes <- function(zs, ...) {
-  ret <- sapply(zs, rss)
+rss.repArchetypes <- function(object, ...) {
+  ret <- sapply(object, rss)
   names(ret) <- paste('r', seq_along(ret), sep='')
 
   return(ret)
@@ -230,7 +230,7 @@ rss.repArchetypes <- function(zs, ...) {
 #' @S3method nparameters repArchetypes
 #' @nord
 nparameters.repArchetypes <- function(object, ...) {
-  ntypes(object[[1]])
+  nparameters(object[[1]])
 }
 
 

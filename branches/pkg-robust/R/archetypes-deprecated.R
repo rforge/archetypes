@@ -1,6 +1,9 @@
 
 
 #' Archetypes getter.
+#'
+#' replaced by \code{\link{parameters}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Archetypes matrix.
@@ -31,9 +34,12 @@ atypes.repArchetypes <- function(zs, ...) {
 
 
 #' Number of archetypes getter.
+#'
+#' replaced by \code{\link{nparameters}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
-#' @return Archetypes matrix.
+#' @return Number of archetypes.
 #' @export
 #' @rdname archetypes-deprecated
 ntypes <- function(zs, ...) {
@@ -56,12 +62,15 @@ ntypes.stepArchetypes <- function(zs, ...) {
 #' @S3method ntypes repArchetypes
 #' @nord
 ntypes.repArchetypes <- function(zs, ...) {
-  ntypes(object[[1]])
+  ntypes(zs[[1]])
 }
 
 
 
 #' Archetypes data approximation.
+#'
+#' replaced by \code{\link{fitted}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Approximated data matrix.
@@ -81,6 +90,9 @@ adata.archetypes <- function(zs, ...) {
 
 
 #' Alpha getter.
+#'
+#' replaced by \code{\link{coef}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Alpha matrix.
@@ -100,6 +112,9 @@ alphas.archetypes <- function(zs, ...) {
 
 
 #' Beta getter.
+#'
+#' replaced by \code{\link{coef}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Beta matrix.
@@ -119,6 +134,9 @@ betas.archetypes <- function(zs, ...) {
 
 
 #' Iteration getter.
+#'
+#' removed.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return Number of iterations.
@@ -138,21 +156,22 @@ iters.archetypes <- function(zs, ...) {
 
 
 #' Archetypes history getter.
+#'
+#' removed; see \code{\link{memento}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return The \code{archetypes} object of the requested step.
 #' @export
+#' @rdname archetypes-deprecated
 ahistory <- function(zs, ...) {
+  .Deprecated('memento')
   UseMethod('ahistory')
 }
 
-#' Archetypes history getter.
-#' @param zs An \code{archetypes} object.
-#' @param step The step number to return.
-#' @param ... Ignored.
-#' @return The \code{archetypes} object of the requested step.
-#' @method ahistory archetypes
+
 #' @S3method ahistory archetypes
+#' @nord
 ahistory.archetypes <- function(zs, step, ...) {
   if ( is.null(zs$history) )
     stop('No history available')
@@ -161,27 +180,29 @@ ahistory.archetypes <- function(zs, step, ...) {
     s <- paste('s', step, sep='')
   else
     s <- paste('s', nhistory(zs) + step - 1, sep='')
-  
+
   return(zs$history[[s]][[1]])
 }
 
 
 
 #' Number of history steps getter.
+#'
+#' removed; see \code{\link{memento}}.
+#'
 #' @param zs An \code{archetypes}-related object.
 #' @param ... Further arguments.
 #' @return The number of history steps available.
 #' @export
+#' @rdname archetypes-deprecated
 nhistory <- function(zs, ...) {
+  .Deprecated('memento')
   UseMethod('nhistory')
 }
 
-#' Archetypes number of history steps getter.
-#' @param zs An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return The number of history steps available.
-#' @method nhistory archetypes
+
 #' @S3method nhistory archetypes
+#' @nord
 nhistory.archetypes <- function(zs, ...) {
   if ( is.null(zs$history) )
     stop('No history available')

@@ -128,11 +128,11 @@ residuals.archetypes <- function(object, ...) {
 
 
 #' Residual sum of squares.
-#' @param object An \code{archetypes}-related object.
+#' @param object An object.
 #' @param ... Ignored.
 #' @return Residual sum of squares.
 #' @export
-#' @nord
+#' @rdname archetypes-generics
 rss <- function(object, ...) {
   UseMethod('rss')
 }
@@ -145,7 +145,7 @@ rss <- function(object, ...) {
 #' @method rss archetypes
 #' @S3method rss archetypes
 #' @rdname archetypes-class
-rss.archetypes <- function(object, type = c('scaled', 'single', 'global')) {
+rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) {
   type <- match.arg(type)
   resid <- residuals(object)
 
@@ -161,11 +161,12 @@ rss.archetypes <- function(object, type = c('scaled', 'single', 'global')) {
 #' @param object An \code{archetypes} object.
 #' @param type Return global weights (weighted archetypes) or
 #'   weights calculated during the iterations (robust archetypes).
+#' @param ... Ignored.
 #' @return Vector of weights.
 #' @method weights archetypes
 #' @S3method weights archetypes
 #' @rdname archetypes-class
-weights.archetypes <- function(object, type = c('weights', 'reweights')) {
+weights.archetypes <- function(object, type = c('weights', 'reweights'), ...) {
   type <- match.arg(type)
   object[[type]]
 }
@@ -212,11 +213,11 @@ predict.archetypes <- function(object, newdata = NULL,
 
 
 #' Number of parameters.
-#' @param object An \code{archetypes}-related object.
+#' @param object An object.
 #' @param ... Further arguments.
-#' @return Number of archetypes.
+#' @return Number of parameters.
 #' @export
-#' @nord
+#' @rdname archetypes-generics
 nparameters <- function(object, ...) {
   UseMethod('nparameters')
 }
