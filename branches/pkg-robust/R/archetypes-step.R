@@ -213,7 +213,7 @@ print.repArchetypes <- function(x, ...) {
 #' @return A list of archetypes matrices.
 #' @nord
 .parameters.repArchetypes <- function(object, ...) {
-  lapply(object, atypes)
+  lapply(object, parameters)
 }
 
 #' Return fitted archetypes.
