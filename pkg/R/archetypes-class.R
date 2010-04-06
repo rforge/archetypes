@@ -78,6 +78,7 @@ print.archetypes <- function(x, full = TRUE, ...) {
 #' @param ... Ignored.
 #' @return Matrix with approximated data.
 #' @method fitted archetypes
+#' @importFrom stats fitted
 #' @S3method fitted archetypes
 #' @rdname archetypes-class
 fitted.archetypes <- function(object, ...) {
@@ -113,6 +114,7 @@ setMethod('parameters',
 #' @param ... Ignored.
 #' @return Coefficient matrix.
 #' @method coef archetypes
+#' @importFrom stats coef
 #' @S3method coef archetypes
 #' @rdname archetypes-class
 coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
@@ -126,6 +128,7 @@ coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
 #' @param ... Ignored.
 #' @return Matrix with residuals.
 #' @method residuals archetypes
+#' @importFrom stats residuals
 #' @S3method residuals archetypes
 #' @rdname archetypes-class
 residuals.archetypes <- function(object, ...) {
@@ -171,6 +174,7 @@ rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) 
 #' @param ... Ignored.
 #' @return Vector of weights.
 #' @method weights archetypes
+#' @importFrom stats weights
 #' @S3method weights archetypes
 #' @rdname archetypes-class
 weights.archetypes <- function(object, type = c('weights', 'reweights'), ...) {

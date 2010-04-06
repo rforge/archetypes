@@ -2,8 +2,8 @@ Package: archetypes
 Type: Package
 Title: Archetypal Analysis
 Version: 2.0
-Date: 2010-04-01
-Depends: methods, modeltools, nnls (>= 1.1)
+Date: 2010-04-06
+Depends: methods, stats, modeltools, nnls (>= 1.1)
 Suggests: MASS, vcd, mlbench
 Author: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
@@ -11,4 +11,4 @@ Description: The main function archetypes implements a framework for
   archetypal analysis supporting arbitary problem solving mechanisms
   for the different conceputal parts of the algorithm.
 License: GPL (>= 2)
-Revision: 17
+Revision: 41
