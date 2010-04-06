@@ -1,7 +1,8 @@
 
 Changes in archetypes version 2.0
 
-  o cleaned up interface; see '?archetypes-deprecated'.
+  o cleaned up interface; see '?archetypes-deprecated' and
+    '?archetypes-generics'.
 
   o added weighted and robust archetypes; see 'demo(robust-toy)' and
     'demo(robust-ozone)'.

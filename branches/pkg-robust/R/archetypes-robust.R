@@ -8,8 +8,8 @@
 #' @param k The number of archetypes.
 #' @param familyBlocks Exchange predefined family blocks.
 #' @param ... Arguments available for \code{\link{archetypes}}.
-#' @return An object of class \code{robustArchetypes}and
-#'   \code{\link{archetypes}}.
+#' @return An object of class \code{robustArchetypes} and
+#'   \code{\link{archetypes-class}}.
 #' @export
 #' @rdname archetypes
 robustArchetypes <- function(data, k, familyBlocks = list(), ...) {

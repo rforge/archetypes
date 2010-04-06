@@ -259,15 +259,15 @@ make.random.initfn <- function(k) {
 
   bp.initfn <- function(x, p, ...) {
 
-    n = ncol(x)
-    b = matrix(0, nrow=n, ncol=p)
+    n <- ncol(x)
+    b <- matrix(0, nrow=n, ncol=p)
 
     for ( i in 1:p )
-      b[sample(n, k, replace=FALSE),i] = 1 / k
+      b[sample(n, k, replace=FALSE),i] <- 1 / k
 
-    a = matrix(1, nrow=p, ncol=n) / p
+    a <- matrix(1, nrow = p, ncol = n) / p
 
-    return(list(betas=b, alphas=a))
+    return(list(betas = b, alphas = a))
   }
 
   return(bp.initfn)
@@ -280,12 +280,12 @@ make.random.initfn <- function(k) {
 make.fix.initfn <- function(indizes) {
 
   fix.initfn <- function(x, p, ...) {
-    n = ncol(x)
+    n <- ncol(x)
 
-    b = matrix(0, nrow = n, ncol = p)
-    b[indizes,] = diag(p)
+    b <- matrix(0, nrow = n, ncol = p)
+    b[indizes, ] <- diag(p)
 
-    a = matrix(1, nrow = p, ncol = n) / p
+    a <- matrix(1, nrow = p, ncol = n) / p
 
     return(list(betas = b, alphas = a))
   }
@@ -318,6 +318,30 @@ center.weightfn <- function(data, weights, ...) {
   else {
     center <- rowMeans(data[-dr, ])
     data[-dr, ] <- data[-dr, ] + t(weights * t(center - data[-dr, ]))
+  }
+
+  data
+}
+
+#' Global weight function: move data closer to global center
+#' @param data A numeric \eqn{m \times n} data matrix.
+#' @param weights Vector or matrix of data weights within \eqn{[0, 1]}.
+#' @return Weighted data matrix.
+#' @nord
+center.globweightfn <- function(data, weights, ...) {
+  if ( is.null(weights) )
+    return(data)
+
+  if ( is.vector(weights) )
+    weights <- diag(weights)
+
+  dr <- attr(data, '.Meta')$dummyrow
+
+  if ( is.null(dr) ) {
+    data <- data %*% weights
+  }
+  else {
+    data[-dr, ] <- data[-dr, ] %*% weights
   }
 
   data
@@ -409,6 +433,7 @@ archetypesFamily <- function(which = c('original', 'weighted', 'robust'), ...) {
        alphasfn = nnls.alphasfn,
        betasfn = nnls.betasfn,
        zalphasfn = qrsolve.zalphasfn,
+       globweightfn = function(x, weights) x,
        weightfn = function(x, weights) x,
        reweightsfn = function(x, weights) weights,
        class = NULL)

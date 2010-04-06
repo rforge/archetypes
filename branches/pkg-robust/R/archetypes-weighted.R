@@ -9,8 +9,8 @@
 #' @param weights Data weights matrix.
 #' @param familyBlocks Exchange predefined family blocks.
 #' @param ... Arguments available for \code{\link{archetypes}}.
-#' @return An object of class \code{weightedArchetypes}and
-#'   \code{\link{archetypes}}.
+#' @return An object of class \code{weightedArchetypes} and
+#'   \code{\link{archetypes-class}}.
 #' @export
 #' @rdname archetypes
 weightedArchetypes <- function(data, k, weights = NULL,
@@ -29,7 +29,7 @@ weightedArchetypes <- function(data, k, weights = NULL,
 .weighted.archetypesFamily <- function() {
   f <- .original.archetypesFamily()
   f$class <- 'weightedArchetypes'
-  f$weightfn <- center.weightfn
+  f$globweightfn <- center.globweightfn
   f
 }
 

@@ -23,6 +23,7 @@
 #'   \code{archetypes}.
 #' @seealso \code{\link{archetypes}}
 #' @rdname archetypes-class
+#' @aliases archetypes-class
 as.archetypes <- function(archetypes, k, alphas, rss, iters = NULL, call = NULL,
                           history = NULL, kappas = NULL, betas = NULL, zas = NULL,
                           family = NULL, familyArgs = NULL, residuals = NULL,

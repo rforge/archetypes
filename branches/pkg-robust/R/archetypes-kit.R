@@ -7,7 +7,8 @@
 #' Perform archetypal analysis on a data matrix.
 #' @param data A numeric \eqn{n \times m} data matrix.
 #' @param k The number of archetypes.
-#' @param weights Data weights matrix.
+#' @param weights Data weights matrix or vector (used as elements of
+#'   the diagonal weights matrix).
 #' @param maxIterations The maximum number of iterations.
 #' @param minImprovement The minimal value of improvement between two
 #'   iterations.
@@ -18,9 +19,9 @@
 #' @param family Blocks defining the underlying problem solving mechanisms;
 #'   see \code{\link{archetypesFamily}}.
 #' @param ... Additional arguments for family blocks.
-#' @return An object of class \code{\link{archetypes}}, see
-#'   \code{\link{as.archetypes}}.
-#' @seealso \code{\link{stepArchetypes}}
+#' @return An object of class \code{archetypes}, see
+#'   \code{\link{archetypes-class}}.
+#' @seealso \code{\link{stepArchetypes}}, \code{\link{archetypes-class}}
 #' @references Cutler and Breiman. Archetypal Analysis. Technometrics,
 #'   36(4), 1994. 338-348.
 #' @examples
@@ -59,7 +60,7 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
   x1 <- t(data)
   x1 <- family$scalefn(x1, ...)
   x1 <- family$dummyfn(x1, ...)
-  x0 <- family$weightfn(x1, weights, ...)
+  x0 <- family$globweightfn(x1, weights, ...)
   x <- x0
 
   n <- ncol(x)
