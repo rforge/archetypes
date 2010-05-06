@@ -23,7 +23,7 @@ citEntry(entry="Article",
 	title="Weighted and Robust Archetypal Analysis",
 	author=personList(as.person("Manuel J. A. Eugster"),
 		as.person("Friedrich Leisch")),
-	journal="Technical Report 82, Department of Statistics, Ludwig-Maximilians-Universität München, Germany",
+	journal="Technical Report 82, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany",
 	year="2010",
 	volume="82",
 	pages="1--13",
@@ -33,7 +33,7 @@ citEntry(entry="Article",
 	
 	textVersion=paste("Manuel J. A. Eugster and Friedrich Leisch.",
 		"Weighted and Robust Archetypal Analysis",
-		"Technical Report 82, Department of Statistics, Ludwig-Maximilians-Universität München, Germany. 2010.",
+		"Technical Report 82, Department of Statistics, Ludwig-Maximilians-Universitaet Muenchen, Germany. 2010.",
 		"http://epub.ub.uni-muenchen.de/11498/")
 )
 
