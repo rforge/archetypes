@@ -5,6 +5,7 @@
 
 
 #' Perform archetypal analysis on a data matrix.
+#'
 #' @param data A numeric \eqn{n \times m} data matrix.
 #' @param k The number of archetypes.
 #' @param weights Data weights matrix or vector (used as elements of
@@ -19,16 +20,20 @@
 #' @param family Blocks defining the underlying problem solving mechanisms;
 #'   see \code{\link{archetypesFamily}}.
 #' @param ... Additional arguments for family blocks.
+#'
 #' @return An object of class \code{archetypes}, see
-#'   \code{\link{archetypes-class}}.
-#' @seealso \code{\link{stepArchetypes}}, \code{\link{archetypes-class}}
+#'   \code{\link{as.archetypes}}.
+#'
+#' @family archetypes
+#'
 #' @references Cutler and Breiman. Archetypal Analysis. Technometrics,
 #'   36(4), 1994. 338-348.
+#'
 #' @examples
 #'   data(toy)
 #'   a <- archetypes(toy, 3)
+#'
 #' @export
-#' @note Please see the vignette for a detailed explanation!
 archetypes <- function(data, k, weights = NULL, maxIterations = 100,
                        minImprovement = sqrt(.Machine$double.eps),
                        maxKappa = 1000, verbose = FALSE, saveHistory = TRUE,

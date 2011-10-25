@@ -138,7 +138,6 @@ skeletonplot <- function(x, skel.width = 100, skel.height = 200,
 #'
 #' @return Generic skeleton instance.
 #' @export
-#' @rdname skeletonplot
 #' @usage
 #'   jd()
 jd <- function() {

@@ -15,7 +15,6 @@
 #'   m$states()
 #'   m$get(i)
 #'   }
-#' @rdname memento
 #' @aliases memento
 new.memento <- function() {
 

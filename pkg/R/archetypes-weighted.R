@@ -1,18 +1,22 @@
+#' @include archetypes-class.R
+#' @include archetypes-kit.R
 #' @include archetypes-kit-blocks.R
 {}
 
 
 
-#' Weighted archetypes.
-#' @param data A numeric \eqn{n \times m} data matrix.
-#' @param k The number of archetypes.
+#' Weighted archetypes
+#'
+#' @inheritParams archetypes
 #' @param weights Data weights matrix.
 #' @param familyBlocks Exchange predefined family blocks.
-#' @param ... Arguments available for \code{\link{archetypes}}.
+#'
 #' @return An object of class \code{weightedArchetypes} and
-#'   \code{\link{archetypes-class}}.
+#'   \code{\link{as.archetypes}}.
+#'
+#' @family archetypes
+#'
 #' @export
-#' @rdname archetypes
 weightedArchetypes <- function(data, k, weights = NULL,
                                familyBlocks = list(), ...) {
 
@@ -23,9 +27,6 @@ weightedArchetypes <- function(data, k, weights = NULL,
 
 
 
-#' Weighted family constructor helper.
-#' @return A list of blocks.
-#' @nord
 .weighted.archetypesFamily <- function() {
   f <- .original.archetypesFamily()
   f$class <- 'weightedArchetypes'
@@ -35,16 +36,6 @@ weightedArchetypes <- function(data, k, weights = NULL,
 
 
 
-setOldClass('weightedArchetypes')
+#setOldClass("weightedArchetypes")
+#setIs("weightedArchetypes", "archetypes")
 
-
-
-#' Return fitted archetypes.
-#' @param object An \code{weightedArchetypes} object.
-#' @param ... Ignored.
-#' @return Matrix with \eqn{k} archetypes.
-#' @importFrom modeltools parameters
-#' @nord
-setMethod('parameters',
-          signature = signature(object = 'weightedArchetypes'),
-          .parameters.archetypes)
