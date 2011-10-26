@@ -35,6 +35,8 @@ as.archetypes <- function(object, k, alphas, rss, iters = NULL, call = NULL,
                           family = NULL, familyArgs = NULL, residuals = NULL,
                           weights = NULL, reweights = NULL) {
 
+  rownames(object) <- sprintf("Archetype %s", seq(length = k))
+
   return(structure(list(archetypes = object,
                         k = k,
                         alphas = alphas,

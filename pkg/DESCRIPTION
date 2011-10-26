@@ -24,13 +24,11 @@ Description: The main function archetypes implements a
 License: GPL (>= 2)
 Revision: 44
 Collate:
-    'archetypes-barplot.R'
     'generics.R'
     'archetypes-class.R'
     'archetypes-kit-blocks.R'
     'archetypes-kit.R'
     'archetypes-movie.R'
-    'archetypes-panorama.R'
     'pcplot.R'
     'archetypes-pcplot.R'
     'archetypes-robust.R'
@@ -40,3 +38,5 @@ Collate:
     'archetypes-xyplot.R'
     'memento.R'
     'skeletonplot.R'
+    'panorama.R'
+    'profile.R'

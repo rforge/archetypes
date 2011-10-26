@@ -1,7 +1,8 @@
 
-#' Defined generics
+#' Generic functions
 #'
-#' Generics defined by the archetypes package.
+#' Generic functions defined by the archetypes package:
+#' Return residual sum of squares
 #'
 #' @param object An object
 #' @param ... Futher arguments
