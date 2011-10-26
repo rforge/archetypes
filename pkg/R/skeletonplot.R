@@ -137,9 +137,9 @@ skeletonplot <- function(x, skel.width = 100, skel.height = 200,
 #' measurements available in data set \code{\link{skel}}.
 #'
 #' @return Generic skeleton instance.
+#' @rdname skeletonplot
+#'
 #' @export
-#' @usage
-#'   jd()
 jd <- function() {
   jd <- rbind(c(AnkleDiam=13.9, KneeDiam=18.8, WristDiam=10.5, Bitro=32.0,
                 Biil=27.8, ElbowDiam=13.4, ChestDiam=28.0, ChestDp=15,

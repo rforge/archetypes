@@ -1,15 +1,5 @@
 
 
-#' Panorama plot.
-#' @param object An object.
-#' @param ... Further arguments.
-#' @return Undefined.
-#' @export
-panorama <- function(object, ...) {
-  UseMethod('panorama')
-}
-
-
 
 #' Panorma plot for archetypes.
 #' @param object An \code{\link{archetypes}}-related object.

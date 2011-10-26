@@ -1,6 +1,9 @@
+#' @include generics.R
+{}
 
 
-#' Archetypes object constructor and methods
+
+#' Archetypes object constructor
 #'
 #' @param object The archetypes; a \eqn{p \times m} matrix, see
 #'   \code{\link{parameters}}.
@@ -52,8 +55,7 @@ as.archetypes <- function(object, k, alphas, rss, iters = NULL, call = NULL,
 
 
 
-setOldClass('archetypes')
-
+setOldClass(c("archetypes"))
 
 
 #' @S3method print archetypes
@@ -92,6 +94,9 @@ fitted.archetypes <- function(object, ...) {
 #' @param object An \code{archetypes} object.
 #' @param ... Ignored.
 #' @return Matrix with \eqn{k} archetypes.
+#'
+#' @aliases parameters-methods
+#' @aliases parameters,archetypes-method
 #'
 #' @importFrom modeltools parameters
 #' @exportMethod parameters

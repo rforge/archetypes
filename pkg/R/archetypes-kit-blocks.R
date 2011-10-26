@@ -389,7 +389,7 @@ binary.bisquare0.reweightsfn <- function(resid, reweights,
 ### Archetypes family: ###############################################
 
 
-#' Archetypes family constructor.
+#' Archetypes family constructor
 #'
 #' This function returns a problem solving block for each of the
 #' different conceptual parts of the algorithm.
@@ -397,8 +397,11 @@ binary.bisquare0.reweightsfn <- function(resid, reweights,
 #' @param which The kind of archetypes family.
 #' @param ... Exchange predefined family blocks with self-defined
 #'            functions.
+#'
 #' @return A list containing a function for each of the different parts.
-#' @seealso \code{\link{archetypes}}
+#'
+#' @family archetypes
+#'
 #' @export
 archetypesFamily <- function(which = c('original', 'weighted', 'robust'), ...) {
 

@@ -1,3 +1,4 @@
+#' @include generics.R
 #' @include archetypes-kit-blocks.R
 #' @include archetypes-class.R
 {}

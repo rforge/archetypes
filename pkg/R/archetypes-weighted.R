@@ -9,7 +9,8 @@
 #'
 #' @inheritParams archetypes
 #' @param weights Data weights matrix.
-#' @param familyBlocks Exchange predefined family blocks.
+#' @param familyBlocks Exchange predefined family blocks; see
+#'   \code{\link{archetypesFamily}}.
 #'
 #' @return An object of class \code{weightedArchetypes} and
 #'   \code{\link{as.archetypes}}.
@@ -36,6 +37,4 @@ weightedArchetypes <- function(data, k, weights = NULL,
 
 
 
-#setOldClass("weightedArchetypes")
-#setIs("weightedArchetypes", "archetypes")
-
+setOldClass(c("weightedArchetypes", "archetypes"))

@@ -1,7 +1,7 @@
 Package: archetypes
 Type: Package
 Title: Archetypal Analysis
-Version: 2.1
+Version: 2.1-0
 Date: 2011-10-25
 Depends:
     methods,
@@ -25,6 +25,7 @@ License: GPL (>= 2)
 Revision: 44
 Collate:
     'archetypes-barplot.R'
+    'generics.R'
     'archetypes-class.R'
     'archetypes-kit-blocks.R'
     'archetypes-kit.R'
@@ -39,4 +40,3 @@ Collate:
     'archetypes-xyplot.R'
     'memento.R'
     'skeletonplot.R'
-    'generics.R'

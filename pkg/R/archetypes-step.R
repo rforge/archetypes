@@ -116,6 +116,9 @@ summary.stepArchetypes <- function(object, ...) {
 
 
 
+#' @aliases parameters,stepArchetypes-method
+#' @rdname parameters
+#' @importFrom modeltools parameters
 #' @exportMethod parameters
 setMethod('parameters', signature = c(object = 'stepArchetypes'),
 function(object, ...) {
@@ -176,6 +179,8 @@ print.repArchetypes <- function(x, ...) {
 
 
 
+#' @aliases parameters,repArchetypes-method
+#' @rdname parameters
 #' @importFrom modeltools parameters
 #' @exportMethod parameters
 setMethod('parameters', signature = signature(object = 'repArchetypes'),
