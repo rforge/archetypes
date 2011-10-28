@@ -1,3 +1,8 @@
+#' @include archetypes-class.R
+#' @include archetypes-step.R
+#' @include archetypes-rep.R
+{}
+
 
 
 #' Archetypes profile
@@ -33,6 +38,9 @@ function(fitted, data, type = percentiles, ...) {
   profile <- sapply(seq(length = ncol(data)),
                     function(i) percentiles(profile[, i], data[, i]))
 
+  if ( !is.matrix(profile) ) {
+    profile <- t(as.matrix(profile))
+  }
 
   rownames(profile) <- sprintf("Archetype %s", seq(length = nrow(profile)))
   colnames(profile) <- colnames(data)
@@ -61,7 +69,7 @@ percentiles <- function(x, data, digits = 0) {
 plot.atypes_profile <- function(x, y = NULL, ...) {
   p <- ggplot(melt(x), aes(X2, value))
   p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
-  p <- p + ylim(c(0, 100)) + xlab("Variables") + ylab("Percentile")
+  p <- p + ylim(c(0, 100)) + xlab("Variable") + ylab("Percentile")
   p
 }
 

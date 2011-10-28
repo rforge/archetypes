@@ -35,8 +35,6 @@ as.archetypes <- function(object, k, alphas, rss, iters = NULL, call = NULL,
                           family = NULL, familyArgs = NULL, residuals = NULL,
                           weights = NULL, reweights = NULL) {
 
-  rownames(object) <- sprintf("Archetype %s", seq(length = k))
-
   return(structure(list(archetypes = object,
                         k = k,
                         alphas = alphas,
@@ -91,24 +89,6 @@ fitted.archetypes <- function(object, ...) {
 
 
 
-#' Return fitted archetypes
-#'
-#' @param object An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Matrix with \eqn{k} archetypes.
-#'
-#' @aliases parameters-methods
-#' @aliases parameters,archetypes-method
-#'
-#' @importFrom modeltools parameters
-#' @exportMethod parameters
-setMethod('parameters', signature = c(object = 'archetypes'),
-function(object, ...) {
-  object$archetypes
-})
-
-
-
 #' Return coefficients
 #'
 #' @param object An \code{archetypes} object.
@@ -127,6 +107,63 @@ coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
 
 
 
+#' Fitted archetypes
+#'
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Matrix (with class \code{atypes_parameters}) with \eqn{k}
+#'   archetypes.
+#'
+#' @aliases parameters-methods
+#' @aliases parameters,archetypes-method
+#'
+#' @seealso \code{\link{profile,archetypes-method}}
+#'
+#' @importFrom modeltools parameters
+#' @exportMethod parameters
+setMethod('parameters', signature = c(object = 'archetypes'),
+function(object, ...) {
+  parameters <- object$archetypes
+
+  if ( is.null(parameters) )
+    return(parameters)
+
+
+  rownames(parameters) <- sprintf("Archetype %s",
+                                  seq(length = object$k))
+
+  subclass(parameters, "atypes_parameters")
+})
+
+
+
+#' @rdname parameters
+#' @method plot atypes_parameters
+#' @S3method plot atypes_parameters
+plot.atypes_parameters <- function(x, y = NULL, ...) {
+  p <- ggplot(melt(x), aes(X2, value))
+  p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
+  p <- p + xlab("Variable") + ylab("Value")
+  p
+}
+
+
+
+#' Return number of archetypes
+#'
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Number of archetypes.
+#' @rdname nparameters
+#'
+#' @method nparameters archetypes
+#' @S3method nparameters archetypes
+nparameters.archetypes <- function(object, ...) {
+  return(object$k)
+}
+
+
+
 #' Return residuals
 #'
 #' @param object An \code{archetypes} object.
@@ -139,28 +176,6 @@ coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
 #' @S3method residuals archetypes
 residuals.archetypes <- function(object, ...) {
   object$residuals
-}
-
-
-
-#' Return residual sum of squares
-#'
-#' @param object An \code{archetypes} object.
-#' @param type Return scaled, single or global RSS.
-#' @param ... Ignored.
-#' @return Residual sum of squares.
-#' @method rss archetypes
-#' @rdname rss
-#'
-#' @S3method rss archetypes
-rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) {
-  type <- match.arg(type)
-  resid <- residuals(object)
-
-  switch(type,
-         scaled = object$rss,
-         single = apply(resid, 1, object$family$normfn),
-         global = object$family$normfn(resid) / nrow(resid))
 }
 
 
@@ -199,17 +214,24 @@ kappa.archetypes <- function(z, ...) {
 
 
 
-#' Return number of archetypes
+#' Return residual sum of squares
 #'
 #' @param object An \code{archetypes} object.
+#' @param type Return scaled, single or global RSS.
 #' @param ... Ignored.
-#' @return Number of archetypes.
-#' @rdname nparameters
+#' @return Residual sum of squares.
+#' @method rss archetypes
+#' @rdname rss
 #'
-#' @method nparameters archetypes
-#' @S3method nparameters archetypes
-nparameters.archetypes <- function(object, ...) {
-  return(object$k)
+#' @S3method rss archetypes
+rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) {
+  type <- match.arg(type)
+  resid <- residuals(object)
+
+  switch(type,
+         scaled = object$rss,
+         single = apply(resid, 1, object$family$normfn),
+         global = object$family$normfn(resid) / nrow(resid))
 }
 
 

@@ -58,3 +58,22 @@ panorama <- function(object, ...) {
 pcplot <- function(x, ...) {
   UseMethod('pcplot')
 }
+
+
+
+#' Scatter plot.
+#'
+#' @rdname archetypes-generics
+#'
+#' @export
+xyplot <- function(x, ...) {
+  UseMethod('xyplot')
+}
+
+
+
+### Utility functions: ###############################################
+
+subclass <- function(x, subclass) {
+  structure(x, class = c(subclass, class(x)))
+}

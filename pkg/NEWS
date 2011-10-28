@@ -1,6 +1,9 @@
 
 Changes in archetypes version 2.1-0
 
+  o separated 'repArchetypes' and 'stepArchetypes' to simplify
+    parallel computation.
+
   o ggplot2-ified and introduced a clean abstraction between data and
     visualization; e.g., 'panorama' now returns the panorama data with
     a class attribute and 'plot' visualizes the panorama.
