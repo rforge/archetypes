@@ -1,6 +1,4 @@
 #' @include archetypes-class.R
-#' @include archetypes-step.R
-#' @include archetypes-rep.R
 {}
 
 
@@ -34,6 +32,9 @@ setMethod("profile", signature = c(fitted = "archetypes"),
 function(fitted, data, type = percentiles, ...) {
   stopifnot(!is.null(data))
 
+  if ( is.na(rss(fitted)) )
+    return(NULL)
+
   profile <- parameters(fitted)
   profile <- sapply(seq(length = ncol(data)),
                     function(i) percentiles(profile[, i], data[, i]))
@@ -60,16 +61,25 @@ percentiles <- function(x, data, digits = 0) {
 
 
 
-#' @param x An \code{atypes_profile} object.
-#' @param y Ignored.
+#' @param height An \code{atypes_profile} object.
 #' @param ... Ignored.
 #' @rdname profile
-#' @method plot atypes_profile
-#' @S3method plot atypes_profile
-plot.atypes_profile <- function(x, y = NULL, ...) {
-  p <- ggplot(melt(x), aes(X2, value))
+#' @method barplot atypes_profile
+#' @S3method barplot atypes_profile
+barplot.atypes_profile <- function(height, ...) {
+  p <- ggplot(melt(height), aes(X2, value))
   p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
   p <- p + ylim(c(0, 100)) + xlab("Variable") + ylab("Percentile")
   p
 }
 
+
+
+#' @param x An \code{atypes_profile} object.
+#' @param y Ignored.
+#' @rdname profile
+#' @method plot atypes_profile
+#' @S3method plot atypes_profile
+plot.atypes_profile <- function(x, y = NULL, ...) {
+  barplot.atypes_profile(x, ...)
+}

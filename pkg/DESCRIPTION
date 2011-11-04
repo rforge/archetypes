@@ -39,4 +39,4 @@ Collate:
     'skeletonplot.R'
     'panorama.R'
     'profile.R'
-    'parameters.R'
+    'plot.R'

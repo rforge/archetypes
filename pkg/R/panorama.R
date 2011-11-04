@@ -71,10 +71,11 @@ panorama.archetypes <- function(object, data, distfn = distEuclidean,
 
 
 
+#' @param x An \code{atypes_panorama} object.
 #' @rdname panorama
-#' @method plot atypes_panorama
-#' @S3method plot atypes_panorama
-plot.atypes_panorama <- function(x, y = NULL, ...) {
+#' @method xyplot atypes_panorama
+#' @S3method xyplot atypes_panorama
+xyplot.atypes_panorama <- function(x, ...) {
   x0 <- melt(x)
 
   x1 <- subset(x0, Archetype != "Data point")
@@ -93,6 +94,16 @@ plot.atypes_panorama <- function(x, y = NULL, ...) {
   p <- p + xlab(xlab) + ylab("Distance")
 
   p
+}
+
+
+
+#' @param y Ignored.
+#' @rdname panorama
+#' @method plot atypes_profile
+#' @S3method plot atypes_profile
+plot.atypes_panorama <- function(x, y = NULL, ...) {
+  xyplot.atypes_panorama(x, ...)
 }
 
 

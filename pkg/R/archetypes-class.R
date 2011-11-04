@@ -100,51 +100,9 @@ fitted.archetypes <- function(object, ...) {
 #'
 #' @importFrom stats coef
 #' @S3method coef archetypes
-coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
+coef.archetypes <- function(object, type = c("alphas", "betas"), ...) {
   type <- match.arg(type)
   object[[type]]
-}
-
-
-
-#' Fitted archetypes
-#'
-#' @param object An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Matrix (with class \code{atypes_parameters}) with \eqn{k}
-#'   archetypes.
-#'
-#' @aliases parameters-methods
-#' @aliases parameters,archetypes-method
-#'
-#' @seealso \code{\link{profile,archetypes-method}}
-#'
-#' @importFrom modeltools parameters
-#' @exportMethod parameters
-setMethod('parameters', signature = c(object = 'archetypes'),
-function(object, ...) {
-  parameters <- object$archetypes
-
-  if ( is.null(parameters) )
-    return(parameters)
-
-
-  rownames(parameters) <- sprintf("Archetype %s",
-                                  seq(length = object$k))
-
-  subclass(parameters, "atypes_parameters")
-})
-
-
-
-#' @rdname parameters
-#' @method plot atypes_parameters
-#' @S3method plot atypes_parameters
-plot.atypes_parameters <- function(x, y = NULL, ...) {
-  p <- ggplot(melt(x), aes(X2, value))
-  p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
-  p <- p + xlab("Variable") + ylab("Value")
-  p
 }
 
 
@@ -236,10 +194,64 @@ rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) 
 
 
 
+#' Fitted archetypes
+#'
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Matrix (with class \code{atypes_parameters}) with \eqn{k}
+#'   archetypes.
+#'
+#' @aliases parameters-methods
+#' @aliases parameters,archetypes-method
+#'
+#' @seealso \code{\link{profile,archetypes-method}}
+#'
+#' @importFrom modeltools parameters
+#' @exportMethod parameters
+setMethod('parameters', signature = c(object = 'archetypes'),
+function(object, ...) {
+  parameters <- object$archetypes
+
+  if ( is.null(parameters) )
+    return(parameters)
+
+
+  rownames(parameters) <- sprintf("Archetype %s",
+                                  seq(length = object$k))
+
+  subclass(parameters, "atypes_parameters")
+})
+
+
+
+#' @param height An \code{atypes_parameters} object.
+#' @rdname parameters
+#' @method barplot atypes_parameters
+#' @S3method barplot atypes_parameters
+barplot.atypes_parameters <- function(height, ...) {
+  p <- ggplot(melt(height), aes(X2, value))
+  p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
+  p <- p + xlab("Variable") + ylab("Value")
+  p
+}
+
+
+
+#' @param x An \code{atypes_parameters} object.
+#' @param y Ignored.
+#' @rdname parameters
+#' @method plot atypes_profile
+#' @S3method plot atypes_profile
+plot.atypes_parameters <- function(x, y = NULL, ...) {
+  barplot.atypes_parameters(x, ...)
+}
+
+
+
 ### Not implemented yet: #############################################
 
 predict.archetypes <- function(object, newdata = NULL,
-                               type = c('alphas', 'data'), ...) {
+                               typxe = c('alphas', 'data'), ...) {
   type <- match.arg(type)
 
   if ( is.null(newdata) )
