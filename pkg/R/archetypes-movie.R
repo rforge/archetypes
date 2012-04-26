@@ -55,15 +55,9 @@ movieplot <- function(zs, data, show = c('atypes', 'adata', 'rwdata'),
 #'
 #' Shows the intermediate steps of the algorithm;
 #'
-#' @param zs An \code{\link{archetypes}} object.
-#' @param data The data matrix.
-#' @param show Shows only archetypes currently.
-#' @param ssleep Seconds to sleep before start.
-#' @param bsleep Seconds to sleep between each plot.
 #' @param zas.col Color of the intermediate archetypes.
 #' @param zas.pch Type of the intermediate archetypes points.
 #' @param old.col Color of the archetypes on step further.
-#' @param ... Passed to underlying plot functions.
 #' @return Undefined.
 #' @export
 #' @rdname movieplot
@@ -102,12 +96,6 @@ movieplot2 <- function(zs, data, show='atypes',
 
 
 #' Archetypes parallel coordinates plot movie.
-#' @param zs An \code{\link{archetypes}} object.
-#' @param data The data matrix.
-#' @param show Show archetypes or approximated data.
-#' @param ssleep Seconds to sleep before start.
-#' @param bsleep Seconds to sleep between each plot.
-#' @param ... Passed to underlying pcplot functions.
 #' @return Undefined.
 #' @export
 #' @rdname movieplot

@@ -18,8 +18,7 @@
 #'   }
 #' @aliases memento
 #' @rdname memento
-#'
-#' @export
+#' @noRd
 new.memento <- function() {
 
   memento <- new.env(parent = emptyenv())

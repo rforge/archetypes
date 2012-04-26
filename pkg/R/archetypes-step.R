@@ -4,10 +4,6 @@
 
 #' Run archetypes algorithm repeatedly
 #'
-#' Run archetypes algorithm repeatedly for different numbers of
-#' archetypes. One step is defined by the number of archetypes
-#' \code{k} and the number of replications \code{nrep}.
-#'
 #' @param ... Passed to the specific archetype function.
 #' @param k A vector of integers passed in turn to the k argument of
 #'   \code{\link{archetypes}}.
@@ -18,11 +14,12 @@
 #'   \code{\link{robustArchetypes}},
 #' @param verbose Show progress during exection.
 #'
-#' @return A list with \code{length(k)} elements and class attribute
-#'   \code{stepArchetypes}.
+#' @return A list with \code{k} elements and class attribute
+#'   \code{stepArchetypes}. Each element is a list of class
+#'   \code{repArchetypes} with \code{nrep} elements; only for internal
+#'   usage.
 #'
-#' @family archetypes
-#' @seealso \code{\link{bestModel}}
+#' @seealso \code{\link{archetypes}}
 #'
 #' @examples
 #'   \dontrun{
@@ -40,37 +37,29 @@
 #'
 #' @export
 stepArchetypes <- function(..., k, nrep = 3, method = archetypes, verbose = TRUE) {
-  stopifnot(nrep > 0)
 
+  mycall <- match.call()
   as <- list()
-  as$call <- match.call(expand.dots = TRUE)
-  as$nrep <- nrep
-  as$k <- k
-  as$models <- list()
 
-  for ( i in seq(along = k) ) {
-    as$models[[i]] <- step()
-    for ( j in seq(length = nrep) ) {
-      as$models[[i]][[j]] <- method(..., k = k[i], verbose = verbose)
+  for ( i in 1:length(k) ) {
+    as[[i]] <- list()
+    class(as[[i]]) <- 'repArchetypes'
+
+    for ( j in seq_len(nrep) ) {
+      if ( verbose )
+        cat('\n*** k=', k[i], ', rep=', j, ':\n', sep='')
+
+      as[[i]][[j]] <- method(..., k=k[i])
     }
   }
 
-  subclass(as, "stepArchetypes")
+  return(structure(as, class='stepArchetypes', call=mycall))
 }
 
 
 
-setOldClass("stepArchetypes")
-
-
-
-#' @S3method print stepArchetypes
-print.stepArchetypes <- function(x, ...) {
-  cat("stepArchetypes object\n\n")
-  cat(deparse(x$call), "\n\n")
-  cat("Residual sum of squares:\n")
-  print(round(rss(x), 2))
-}
+setOldClass('repArchetypes')
+setOldClass('stepArchetypes')
 
 
 
@@ -96,58 +85,33 @@ print.stepArchetypes <- function(x, ...) {
 
 
 
-#' @rdname rss
-#' @method rss stepArchetypes
-#'
-#' @S3method rss stepArchetypes
-rss.stepArchetypes <- function(object, ...) {
-  ret <- lapply(object$models, rss)
-  ret <- do.call(rbind, ret)
-  ret <- data.frame(Archetypes = nparameters(object), ret)
-  subclass(ret, "stepArchetypes_rss")
+#' @S3method print stepArchetypes
+print.stepArchetypes <- function(x, ...) {
+  cat('StepArchetypes object\n\n')
+  cat(deparse(attr(x, 'call')), '\n')
 }
 
 
 
-#' @param x A \code{stepArchetypes_rss} object
-#' @param y Ignored.
-#' @rdname rss
-#' @method plot stepArchetypes
+#' Summary method for stepArchetypes object
 #'
-#' @S3method plot stepArchetypes
-plot.stepArchetypes_rss <- function(x, y = NULL, ...) {
-  p <- ggplot(melt(x, "Archetypes"),
-              aes(ordered(Archetypes), value, group = variable,
-                  colour = variable))
-  p <- p + geom_line()
-  p <- p + geom_point()
-  p <- p + xlab("Number of archetypes") + ylab("RSS")
-  p
-}
-
-
-
-#' Return best model per step
+#' @param object A \code{stepArchetypes} object.
+#' @param ... Ignored.
+#' @return Undefined.
 #'
-#' @param object An \code{archetypes} object.
-#' @param reduced Reduce list to valid objects; i.e., remove step if
-#'   no replication was successfull.
-#' @param ... Ignored
+#' @method summary stepArchetypes
+#' @rdname summary
 #'
-#' @rdname bestModel
-#' @method bestModel stepArchetypes
-#'
-#' @S3method bestModel stepArchetypes
-bestModel.stepArchetypes <- function(object, reduced = TRUE, ...) {
-  best <- lapply(object$models, bestModel, reduced = reduced)
+#' @S3method summary stepArchetypes
+summary.stepArchetypes <- function(object, ...) {
+  print(object)
 
-  if ( reduced )
-    best <- best[sapply(best, Negate(is.null))]
+  ps <- nparameters(object)
 
-  object$models <- best
-  object$k <- sapply(best, sapply, "[[", "k")
-  object$nrep <- 1
-  object
+  for ( i in seq_along(object) ) {
+    cat('\nk=', ps[i], ':\n', sep='')
+    print(object[[i]], full=FALSE)
+  }
 }
 
 
@@ -158,39 +122,8 @@ bestModel.stepArchetypes <- function(object, reduced = TRUE, ...) {
 #' @exportMethod parameters
 setMethod('parameters', signature = c(object = 'stepArchetypes'),
 function(object, ...) {
-  subclass(lapply(object$models, parameters), "stepArchetypes_parameters")
+  lapply(object, parameters)
 })
-
-
-
-#' @param transpose Transpose plots arrangement.
-#' @rdname parameters
-#' @method plot stepArchetypes_parameters
-#' @S3method plot stepArchetypes_parameters
-plot.stepArchetypes_parameters <- function(x, y = NULL, transpose = FALSE, ...) {
-  params_plot(x, transpose)
-}
-
-
-
-#' @aliases profile,stepArchetypes-method
-#' @rdname profile
-#' @importFrom stats profile
-#' @exportMethod profile
-setMethod('profile', signature = c(fitted = 'stepArchetypes'),
-function(fitted, data, type = percentiles, ...) {
-  subclass(lapply(fitted$models, profile, data, type), "stepArchetypes_profile")
-})
-
-
-
-#' @param transpose Transpose plots arrangement.
-#' @rdname profile
-#' @method plot stepArchetypes_profile
-#' @S3method plot stepArchetypes_profile
-plot.stepArchetypes_profile <- function(x, y = NULL, transpose = FALSE, ...) {
-  params_plot(x, transpose)
-}
 
 
 
@@ -199,47 +132,98 @@ plot.stepArchetypes_profile <- function(x, y = NULL, transpose = FALSE, ...) {
 #'
 #' @S3method nparameters stepArchetypes
 nparameters.stepArchetypes <- function(object, ...) {
-  return(sapply(object$model, nparameters))
+  return(sapply(object, nparameters))
 }
 
 
 
-### Step utility functions: ##########################################
-
-setOldClass(c("step", "list"))
-
-step <- function() {
-  structure(list(), class = c("step", "list"))
+#' @rdname rss
+#' @method rss stepArchetypes
+#'
+#' @S3method rss stepArchetypes
+rss.stepArchetypes <- function(object, ...) {
+  ret <- t(sapply(object, rss))
+  rownames(ret) <- paste('k', nparameters(object), sep='')
+  return(ret)
 }
 
-rss.step <- function(object, ...) {
-  rss <- sapply(object, rss)
-  names(rss) <- sprintf("Replication%s", seq(along = rss))
-  rss
+
+
+#' Return best model
+#'
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored
+#'
+#' @rdname bestModel
+#' @method bestModel stepArchetypes
+#'
+#' @S3method bestModel stepArchetypes
+bestModel.stepArchetypes <- function(object, ...) {
+  zsmin <- lapply(object, bestModel)
+
+  if ( length(zsmin) == 1 )
+    return(zsmin[[1]])
+  else
+    return(zsmin)
 }
 
-nparameters.step <- function(object, ...) {
-  sapply(object, nparameters)[1]
+
+
+#' @S3method print repArchetypes
+print.repArchetypes <- function(x, ...) {
+  for ( i in seq_along(x) )
+    print(x[[i]], ...)
+
+  invisible(x)
 }
 
-bestModel.step <- function(object, reduced = TRUE, ...) {
-  which <- which.min(rss(object))
 
-  if ( length(which) == 0 )
-    if ( reduced )
-      return(NULL)
-    else
-      which <- 1
 
-  subclass(list(object[[which]]), "step")
-}
-
-setMethod('parameters', signature = c(object = 'step'),
+#' @aliases parameters,repArchetypes-method
+#' @rdname parameters
+#' @importFrom modeltools parameters
+#' @exportMethod parameters
+setMethod('parameters', signature = signature(object = 'repArchetypes'),
 function(object, ...) {
   lapply(object, parameters)
 })
 
-setMethod('profile', signature = c(fitted = 'step'),
-function(fitted, data, type = percentiles, ...) {
- lapply(fitted, profile, data, type)
-})
+
+
+#' @rdname rss
+#' @method rss repArchetypes
+#'
+#' @S3method rss repArchetypes
+rss.repArchetypes <- function(object, ...) {
+  ret <- sapply(object, rss)
+  names(ret) <- paste('r', seq_along(ret), sep='')
+
+  return(ret)
+}
+
+
+
+#' @rdname nparameters
+#' @method nparameters repArchetypes
+#'
+#' @S3method nparameters repArchetypes
+nparameters.repArchetypes <- function(object, ...) {
+  nparameters(object[[1]])
+}
+
+
+
+#' @rdname bestModel
+#' @method bestModel repArchetypes
+#'
+#' @S3method bestModel repArchetypes
+bestModel.repArchetypes <- function(object, ...) {
+  m <- which.min(rss(object))
+
+  if ( length(m) == 0 )
+    return(object[[1]])
+  else
+    return(object[[m]])
+}
+
+

@@ -7,27 +7,30 @@ Depends:
     methods,
     stats,
     modeltools,
-    nnls (>= 1.1),
-    ggplot2
+    nnls (>= 1.1)
 Suggests:
     MASS,
     vcd,
     mlbench,
+    ggplot2
 Author: Manuel J. A. Eugster
     <manuel.eugster@stat.uni-muenchen.de>
 Maintainer: Manuel J. A. Eugster
     <manuel.eugster@stat.uni-muenchen.de>
-Description: A framework for archetypal analysis supporting
-    arbitary problem solving mechanisms for the different
-    conceputal parts of the algorithm.
+Description: The main function archetypes implements a
+    framework for archetypal analysis supporting arbitary
+    problem solving mechanisms for the different conceputal
+    parts of the algorithm.
 License: GPL (>= 2)
 Revision: 44
 Collate:
+    'archetypes-barplot.R'
     'generics.R'
     'archetypes-class.R'
     'archetypes-kit-blocks.R'
     'archetypes-kit.R'
     'archetypes-movie.R'
+    'archetypes-panorama.R'
     'pcplot.R'
     'archetypes-pcplot.R'
     'archetypes-robust.R'
@@ -37,6 +40,3 @@ Collate:
     'archetypes-xyplot.R'
     'memento.R'
     'skeletonplot.R'
-    'panorama.R'
-    'profile.R'
-    'plot.R'

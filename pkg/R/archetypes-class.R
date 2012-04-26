@@ -89,6 +89,24 @@ fitted.archetypes <- function(object, ...) {
 
 
 
+#' Return fitted archetypes
+#'
+#' @param object An \code{archetypes} object.
+#' @param ... Ignored.
+#' @return Matrix with \eqn{k} archetypes.
+#'
+#' @aliases parameters-methods
+#' @aliases parameters,archetypes-method
+#'
+#' @importFrom modeltools parameters
+#' @exportMethod parameters
+setMethod('parameters', signature = c(object = 'archetypes'),
+function(object, ...) {
+  object$archetypes
+})
+
+
+
 #' Return coefficients
 #'
 #' @param object An \code{archetypes} object.
@@ -100,24 +118,9 @@ fitted.archetypes <- function(object, ...) {
 #'
 #' @importFrom stats coef
 #' @S3method coef archetypes
-coef.archetypes <- function(object, type = c("alphas", "betas"), ...) {
+coef.archetypes <- function(object, type = c('alphas', 'betas'), ...) {
   type <- match.arg(type)
   object[[type]]
-}
-
-
-
-#' Return number of archetypes
-#'
-#' @param object An \code{archetypes} object.
-#' @param ... Ignored.
-#' @return Number of archetypes.
-#' @rdname nparameters
-#'
-#' @method nparameters archetypes
-#' @S3method nparameters archetypes
-nparameters.archetypes <- function(object, ...) {
-  return(object$k)
 }
 
 
@@ -134,6 +137,28 @@ nparameters.archetypes <- function(object, ...) {
 #' @S3method residuals archetypes
 residuals.archetypes <- function(object, ...) {
   object$residuals
+}
+
+
+
+#' Return residual sum of squares
+#'
+#' @param object An \code{archetypes} object.
+#' @param type Return scaled, single or global RSS.
+#' @param ... Ignored.
+#' @return Residual sum of squares.
+#' @method rss archetypes
+#' @rdname rss
+#'
+#' @S3method rss archetypes
+rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) {
+  type <- match.arg(type)
+  resid <- residuals(object)
+
+  switch(type,
+         scaled = object$rss,
+         single = apply(resid, 1, object$family$normfn),
+         global = object$family$normfn(resid) / nrow(resid))
 }
 
 
@@ -172,78 +197,17 @@ kappa.archetypes <- function(z, ...) {
 
 
 
-#' Return residual sum of squares
-#'
-#' @param object An \code{archetypes} object.
-#' @param type Return scaled, single or global RSS.
-#' @param ... Ignored.
-#' @return Residual sum of squares.
-#' @method rss archetypes
-#' @rdname rss
-#'
-#' @S3method rss archetypes
-rss.archetypes <- function(object, type = c('scaled', 'single', 'global'), ...) {
-  type <- match.arg(type)
-  resid <- residuals(object)
-
-  switch(type,
-         scaled = object$rss,
-         single = apply(resid, 1, object$family$normfn),
-         global = object$family$normfn(resid) / nrow(resid))
-}
-
-
-
-#' Fitted archetypes
+#' Return number of archetypes
 #'
 #' @param object An \code{archetypes} object.
 #' @param ... Ignored.
-#' @return Matrix (with class \code{atypes_parameters}) with \eqn{k}
-#'   archetypes.
+#' @return Number of archetypes.
+#' @rdname nparameters
 #'
-#' @aliases parameters-methods
-#' @aliases parameters,archetypes-method
-#'
-#' @seealso \code{\link{profile,archetypes-method}}
-#'
-#' @importFrom modeltools parameters
-#' @exportMethod parameters
-setMethod('parameters', signature = c(object = 'archetypes'),
-function(object, ...) {
-  parameters <- object$archetypes
-
-  if ( is.null(parameters) )
-    return(parameters)
-
-
-  rownames(parameters) <- sprintf("Archetype %s",
-                                  seq(length = object$k))
-
-  subclass(parameters, "atypes_parameters")
-})
-
-
-
-#' @param height An \code{atypes_parameters} object.
-#' @rdname parameters
-#' @method barplot atypes_parameters
-#' @S3method barplot atypes_parameters
-barplot.atypes_parameters <- function(height, ...) {
-  p <- ggplot(melt(height), aes(X2, value))
-  p <- p + geom_bar(stat = "identity") + facet_grid(X1 ~ .)
-  p <- p + xlab("Variable") + ylab("Value")
-  p
-}
-
-
-
-#' @param x An \code{atypes_parameters} object.
-#' @param y Ignored.
-#' @rdname parameters
-#' @method plot atypes_profile
-#' @S3method plot atypes_profile
-plot.atypes_parameters <- function(x, y = NULL, ...) {
-  barplot.atypes_parameters(x, ...)
+#' @method nparameters archetypes
+#' @S3method nparameters archetypes
+nparameters.archetypes <- function(object, ...) {
+  return(object$k)
 }
 
 
@@ -251,7 +215,7 @@ plot.atypes_parameters <- function(x, y = NULL, ...) {
 ### Not implemented yet: #############################################
 
 predict.archetypes <- function(object, newdata = NULL,
-                               typxe = c('alphas', 'data'), ...) {
+                               type = c('alphas', 'data'), ...) {
   type <- match.arg(type)
 
   if ( is.null(newdata) )
