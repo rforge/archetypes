@@ -1,0 +1,50 @@
+
+Changes in archetypes version 2.1-0
+
+  o Harmonized weights with reweights; default weights are now 1 for
+    evey observation of the data set (not NULL).
+
+  o Simplified stepArchetypes and removed the
+    repArchetypes-abstraction.
+
+  o ggplot2-ified and introduced a clean abstraction between data and
+    visualization; e.g., 'panorama' now returns the panorama data with
+    a class attribute and 'plot' visualizes the panorama.
+
+  o roxygen2-ified; added the Build-dep field to the DESCRIPTION
+    file.
+
+  o Removed deprecated functions.
+
+
+Changes in archetypes version 2.0-2
+
+  o Added analysis of the simulation study for robust archetypes
+    as demo.
+
+
+Changes in archetypes version 2.0-1
+
+  o 'no.scalefn' returns an empty matrix if 'zs' is null.
+
+  o 'xyplot.weightedArchetypes' displays the main diagonal if
+    'weights' is a matrix.
+
+  o Technical report on robust and weighted archetypes is cited.
+
+
+Changes in archetypes version 2.0-0
+
+  o Cleaned up interface; see '?archetypes-deprecated' and
+    '?archetypes-generics'.
+
+  o Added weighted and robust archetypes; see 'demo(robust-toy)' and
+    'demo(robust-ozone)'.
+
+  o Added 'memento' environment to save internal states.
+
+  o Added panorama plot; see '?panorama.archetypes'
+
+  o Improved 'barplot.archetypes'.
+
+
