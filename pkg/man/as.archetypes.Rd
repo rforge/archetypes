@@ -6,7 +6,7 @@
     call = NULL, history = NULL, kappas = NULL,
     betas = NULL, zas = NULL, family = NULL,
     familyArgs = NULL, residuals = NULL, weights = NULL,
-    reweights = NULL)
+    reweights = NULL, scaling = NULL)
 }
 \arguments{
   \item{object}{The archetypes; a \eqn{p \times m} matrix,
@@ -48,6 +48,8 @@
   \item{weights}{The data weights.}
 
   \item{reweights}{The data reweights.}
+
+  \item{scaling}{The scaling parameters of the data.}
 }
 \value{
   A list with an element for each parameter and class

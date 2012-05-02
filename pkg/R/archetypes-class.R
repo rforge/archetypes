@@ -23,6 +23,7 @@
 #' @param residuals The residuals.
 #' @param weights The data weights.
 #' @param reweights The data reweights.
+#' @param scaling The scaling parameters of the data.
 #'
 #' @return A list with an element for each parameter and class attribute
 #'   \code{archetypes}.
@@ -33,7 +34,7 @@
 as.archetypes <- function(object, k, alphas, rss, iters = NULL, call = NULL,
                           history = NULL, kappas = NULL, betas = NULL, zas = NULL,
                           family = NULL, familyArgs = NULL, residuals = NULL,
-                          weights = NULL, reweights = NULL) {
+                          weights = NULL, reweights = NULL, scaling = NULL) {
 
   return(structure(list(archetypes = object,
                         k = k,
@@ -49,7 +50,8 @@ as.archetypes <- function(object, k, alphas, rss, iters = NULL, call = NULL,
                         familyArgs = familyArgs,
                         residuals = residuals,
                         weights = weights,
-                        reweights = reweights),
+                        reweights = reweights,
+                        scaling = scaling),
                    class = c(family$class, 'archetypes')))
 }
 
@@ -212,20 +214,35 @@ nparameters.archetypes <- function(object, ...) {
 
 
 
-### Not implemented yet: #############################################
+#' Predict method for archetypal analysis
+#'
+#' @param object An \code{archetypes} object.
+#' @param newdata A data frame with data for which to
+#'   predict the alpha coefficients.
+#' @param ... Ignored.
+#' @return The predict alpha coefficients.
+#' @rdname predict
+#'
+#' @method predict archetypes
+#' @S3method predict archetypes
+predict.archetypes <- function(object, newdata, ...) {
+  stopifnot(object$family$which == "original")
+  
+  scale <- object$scaling
 
-predict.archetypes <- function(object, newdata = NULL,
-                               type = c('alphas', 'data'), ...) {
-  type <- match.arg(type)
+  ## HACK: use blocks!
+  x <- t(newdata)
+  x <- x - scale$mean
+  x <- x / scale$sd
+  x <- object$family$dummyfn(x, ...)
 
-  if ( is.null(newdata) )
-    return(switch(type,
-                  alphas = coef(object, type = 'alphas'),
-                  data = fitted(object)))
+  zs <- t(parameters(object))
+  zs <- zs - scale$mean
+  zs <- zs / scale$sd
+  zs <- rbind(zs, 200)
 
-  stop('Not implemented yet.')
+  alphas <- matrix(NA, ncol = ncol(x), nrow = ncol(coef(object)))
+  alphas <- object$family$alphasfn(alphas, zs, x)
 
-  ### Something like the following ...
-  #if ( type == 'alphas' )
-  #  object$family$alphasfn(NULL, t(object$archetypes), t(newdata))
+  t(alphas)
 }

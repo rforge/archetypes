@@ -177,7 +177,8 @@ archetypes <- function(data, k, weights = NULL, maxIterations = 100,
                        call = mycall, history = memento, kappas = kappas,
                        betas = t(betas), family = family,
                        familyArgs = famargs, residuals = t(resid),
-                       weights = weights, reweights = reweights))
+                       weights = weights, reweights = reweights,
+                       scaling = attr(x1, ".Meta")))
 }
 
 
