@@ -14,8 +14,6 @@
   <h1>Archetypal Analysis</h1>
   <div id="h1sub">R package <tt>archetypes</tt></div>
 
-  <p class="header"></p>
-
   <p>
     The <a href="http://www.merriam-webster.com/dictionary/archetype">Merriam-Webster
     Online Dictionary</a> defines an archetyp as the original pattern
@@ -30,40 +28,74 @@
     represented as convex mixtures of the archetypes.
   </p>
 
+  <p class="header">
+    <img src="toy-atypes.png" />
+    <img src="toy-adata.png" />
+    <img src="skel.png" />
+  </p>
 
-  <h2>Demonstration</h2>
 
-  <h3>Introduction to the package</h3>
+  <h2>Usage</h2>
 
   <p>
-    The <a href="http://cran.r-project.org/web/packages/archetypes/vignettes/archetypes.pdf">vignette</a>
+    The <b>stable version</b> of <tt>archetypes</tt> is available
+    on <a href="http://cran.r-project.org/package=archetypes">CRAN</a>;
+    issue the following from within R to install and load it:
+    <blockquote>
+      <pre class="code">
+R> install.packages("archetypes")
+R> library("archetypes")</pre>
+    </blockquote>
+  </p>
+
+
+  <h2>Vignettes</h2>
+  
+  <p>
+    <b>From Spider-Man to Hero -- Archetypal Analysis in R:</b><br/>
+    This <a href="http://cran.r-project.org/web/packages/archetypes/vignettes/archetypes.pdf">vignette</a>
     (an updated version
     of <a href="http://www.jstatsoft.org/v30/i08">Eugster and Leisch,
     2009</a>) demonstrates the usage of the package:
-    <blockquote>
-      <pre>
+    <blockquote class="code"><pre>
 R> vignette("archetypes", package = "archetypes")
-R> edit(vignette("archetypes", package = "archetypes"))
-      </pre>
-    </blockquote>
+R> edit(vignette("archetypes", package = "archetypes"))</pre></blockquote>
   </p>
 
-  <h3></h3>
 
-
-
-  <h2>Download</h2>
+  <h2>Demos</h2>
 
   <p>
-    The <b>stable version</b> of archetypes is available
-    on <a href="http://cran.r-project.org/package=archetypes">CRAN</a>;
-    issue the following from within R to install it:
-    <blockquote>
-    <pre>
-R> install.packages("archetypes")
-    </pre>
-    </blockquote>
+    <b>robust-toy:</b> Weighted and robust archetypal analysis by
+    means of an artificial toy data set.
+    <blockquote class="code"><pre>
+R> demo("robust-toy", package = "archetypes")</pre></blockquote>
   </p>
+  <p>
+    <b>robust-ozone:</b> Weighted and robust archetypal analysis by
+    means of the Ozone (mlbench) data set.
+    <blockquote class="code"><pre>
+R> demo("robust-ozone", package = "archetypes")</pre></blockquote>
+  </p>
+  <p>
+    <b>robust-simulation:</b> Simulation study of the robust
+    archetypal analysis.
+    <blockquote class="code"><pre>
+R> demo("robust-simulation", package = "archetypes")</pre></blockquote>
+  </p>
+
+
+  <h2>See also</h2>
+
+  <p>
+    For the application of archetypal analysis see demos in
+    the <a href="http://benchmark.r-forge.r-project.org/"><tt>benchmark</tt></a>
+    and <a href="http://soccer.r-forge.r-project.org/"><tt>SportsAnalytics</tt></a>
+    packages.
+  </p>
+
+  
+  <h2>Development</h2>
 
   <p>
     The <b>development version</b> is available on
@@ -75,6 +107,5 @@ R> install.packages("archetypes")
     Created by <a href="http://www.statistik.lmu.de/~eugster"
     style="color: #C0C0C0">Manuel J. A. Eugster</a>, 2011.
   </p>
-
 </body>
 </html>
