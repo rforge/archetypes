@@ -14,7 +14,9 @@ Suggests:
     mlbench,
     ggplot2
 Author: Manuel J. A. Eugster
-    <manuel.eugster@stat.uni-muenchen.de>
+    <manuel.eugster@stat.uni-muenchen.de>,
+    Friedrich leisch
+    <friedrich.leisch@boku.ac.at>
 Maintainer: Manuel J. A. Eugster
     <manuel.eugster@stat.uni-muenchen.de>
 Description: The main function archetypes implements a
@@ -40,3 +42,4 @@ Collate:
     'archetypes-xyplot.R'
     'memento.R'
     'skeletonplot.R'
+    'archetypes-map.R'

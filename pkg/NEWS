@@ -6,6 +6,12 @@ Changes in archetypes version 2.1-0
 
   o Removed deprecated functions.
 
+  o Cleaned vignette 'archetypes.Rnw' and 'inst/doc' folder.
+
+  o Added predict function for 'original' archetypes.
+
+  o Added archetype maps; based on cody by Friedrich Leisch.
+
 
 Changes in archetypes version 2.0-2
 

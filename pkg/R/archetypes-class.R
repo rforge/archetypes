@@ -214,9 +214,12 @@ nparameters.archetypes <- function(object, ...) {
 
 
 
-#' Predict method for archetypal analysis
+#' Predict method for archetypal analysis fits
 #'
-#' @param object An \code{archetypes} object.
+#' This method produces predicted alpha coefficients for new data.
+#'
+#' @param object An \code{archetypes} object; currently only
+#'   \code{\link[=archetypesFamily]{original}}-family objects.
 #' @param newdata A data frame with data for which to
 #'   predict the alpha coefficients.
 #' @param ... Ignored.
@@ -227,7 +230,7 @@ nparameters.archetypes <- function(object, ...) {
 #' @S3method predict archetypes
 predict.archetypes <- function(object, newdata, ...) {
   stopifnot(object$family$which == "original")
-  
+
   scale <- object$scaling
 
   ## HACK: use blocks!
