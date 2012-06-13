@@ -35,7 +35,7 @@ movieplot <- function(zs, data, show = c('atypes', 'adata', 'rwdata'),
              xyplot(a, data, ...)
            },
            adata = {
-             plot(adata(a), ...)
+             plot(fitted(a), ...)
            },
            rwdata = {
              d <- zs$family$weightfn(data, a$reweights)
@@ -115,7 +115,7 @@ moviepcplot <- function(zs, data, show=c('atypes', 'adata'),
     if ( atypesmovie )
       pcplot(a, data, ...)
     else
-      pcplot(adata(a), rx=rx, ...)
+      pcplot(fitted(a), rx=rx, ...)
 
     Sys.sleep(bsleep)
   }

@@ -13,12 +13,10 @@ Suggests:
     vcd,
     mlbench,
     ggplot2
-Author: Manuel J. A. Eugster
-    <manuel.eugster@stat.uni-muenchen.de>,
-    Friedrich leisch
-    <friedrich.leisch@boku.ac.at>
-Maintainer: Manuel J. A. Eugster
-    <manuel.eugster@stat.uni-muenchen.de>
+Authors@R:
+    c(person("Manuel", "J. A. Eugster", role = c("aut", "cre"),
+             email = "manuel.eugster@stat.uni-muenchen.de"),
+      person("Friedrich", "Leisch", role = "aut"))
 Description: The main function archetypes implements a
     framework for archetypal analysis supporting arbitary
     problem solving mechanisms for the different conceputal
