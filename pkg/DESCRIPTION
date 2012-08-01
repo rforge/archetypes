@@ -1,7 +1,7 @@
 Package: archetypes
 Type: Package
 Title: Archetypal Analysis
-Version: 2.1-0
+Version: 2.1-1
 Date: 2011-10-25
 Depends:
     methods,
@@ -12,11 +12,11 @@ Suggests:
     MASS,
     vcd,
     mlbench,
-    ggplot2
-Authors@R:
-    c(person("Manuel", "J. A. Eugster", role = c("aut", "cre"),
-             email = "manuel.eugster@stat.uni-muenchen.de"),
-      person("Friedrich", "Leisch", role = "aut"))
+    ggplot2,
+    TSP
+Authors@R: c(person("Manuel", "J. A. Eugster", role = c("aut", "cre"),
+    email = "manuel.eugster@stat.uni-muenchen.de"),
+    person("Friedrich", "Leisch", role = "aut"))
 Description: The main function archetypes implements a
     framework for archetypal analysis supporting arbitary
     problem solving mechanisms for the different conceputal
@@ -41,3 +41,4 @@ Collate:
     'memento.R'
     'skeletonplot.R'
     'archetypes-map.R'
+    'deploy.R'
