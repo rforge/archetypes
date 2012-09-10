@@ -8,7 +8,7 @@
 #' @param projection Projection function; see
 #'   \code{\link{archmap_projections}}
 #' @param projection_args Arguments passed to the projection function;
-#'   see \code{\link{archmap_projections}} 
+#'   see \code{\link{archmap_projections}}
 #' @param rotate Rotation angle to rotate the projection
 #' @param cex Character expansion of archetypes
 #' @param col Color of observations
@@ -126,19 +126,18 @@ simplex_projection <- function(x, r = 10) {
 #' @export
 tspsimplex_projection <- function(x, r = 10, equidist = FALSE, ...) {
   stopifnot(require("TSP"))
- 
+
   d <- dist(x)
   xo <- as.integer(solve_TSP(TSP(d), ...))
-  
+
   if ( equidist ) {
     phi <- seq(-pi, pi, length.out = nrow(x) + 1)
     phi <- phi[-1][xo]
   } else {
     d <- as.matrix(d)
     phi <- mapply(function(i, j) d[i, j], xo, c(tail(xo, -1), xo[1]))
-    phi <- c(0, cumsum(phi) / sum(phi))
+    phi <- (phi - min(phi)) / (max(phi) - min(phi))
     phi <- phi * 2 * pi - pi
-    phi <- phi[-1]
   }
 
   cbind(x = r * cos(phi),
