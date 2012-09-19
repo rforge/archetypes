@@ -4,3 +4,4 @@ inst/doc/toy-as.RData
 inst/doc/toy-gas.RData
 inst/doc/Rplots.pdf
 inst/nnls
+R/deploy.R
