@@ -136,8 +136,9 @@ tspsimplex_projection <- function(x, r = 10, equidist = FALSE, ...) {
   } else {
     d <- as.matrix(d)
     phi <- mapply(function(i, j) d[i, j], xo, c(tail(xo, -1), xo[1]))
-    phi <- (phi - min(phi)) / (max(phi) - min(phi))
-    phi <- phi * 2 * pi - pi
+    phi <- cumsum((phi / sum(phi)) * 360)
+    phi <- c(0, head(phi, -1))
+    phi <- ((phi * 2 * pi) / 360) - pi
   }
 
   cbind(x = r * cos(phi),
