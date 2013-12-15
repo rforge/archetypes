@@ -1,8 +1,8 @@
 Package: archetypes
 Type: Package
 Title: Archetypal Analysis
-Version: 2.1-1
-Date: 2011-10-25
+Version: 2.1-2
+Date: 2013-12-15
 Depends:
     methods,
     stats,
@@ -22,7 +22,6 @@ Description: The main function archetypes implements a
     problem solving mechanisms for the different conceputal
     parts of the algorithm.
 License: GPL (>= 2)
-Revision: 44
 Collate:
     'archetypes-barplot.R'
     'generics.R'

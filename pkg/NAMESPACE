@@ -1,3 +1,5 @@
+import(nnls)
+import(methods)
 export(archetypes)
 export(archetypesFamily)
 export(archmap)
