@@ -44,7 +44,8 @@
   (projected) archetypes.
 }
 \examples{
-data("skel", package = "archetypes")
+\dontrun{
+  data("skel", package = "archetypes")
   skel2 <- subset(skel, select = -Gender)
 
   set.seed(1981)
@@ -64,6 +65,7 @@ data("skel", package = "archetypes")
   ## MDS projection:
   archmap(a, col = skel$Gender,
           projection = atypes_projection)
+}
 }
 \seealso{
   Other archmap: \code{\link{atypes_projection}},
