@@ -2,14 +2,12 @@
 \alias{simplexplot}
 \title{Simplex visualization}
 \usage{
-  simplexplot(object, radius = 10, order = NULL,
-    labels_cex = 1, labels = NULL, show_labels = TRUE,
-    points_col = "#00000044", points_pch = 19,
-    points_cex = 1, projection = simplex_projection,
-    show_points = TRUE, show_circle = TRUE,
-    circle_col = "lightgray", show_edges = TRUE,
-    edges_col = "lightgray", show_direction = FALSE,
-    direction_length = 1, directions_col = points_col, ...)
+simplexplot(object, radius = 10, order = NULL, labels_cex = 1,
+  labels = NULL, show_labels = TRUE, points_col = "#00000044",
+  points_pch = 19, points_cex = 1, projection = simplex_projection,
+  show_points = TRUE, show_circle = TRUE, circle_col = "lightgray",
+  show_edges = TRUE, edges_col = "lightgray", show_direction = FALSE,
+  direction_length = 1, directions_col = points_col, ...)
 }
 \arguments{
   \item{object}{An \code{\link{archetypes}} object}
@@ -53,19 +51,19 @@
   \item{...}{Additional arguments; currently ignored}
 }
 \value{
-  Invisible list of all computed components needed for the
-  simplex visualization.
+Invisible list of all computed components needed for the
+simplex visualization.
 }
 \description{
-  The stochastic nature of the alpha coefficients implies
-  that they exist on a standard (K-1)-simplex with the K
-  archetypes Z as the corners, and the coefficients as the
-  coordinate with respect to these corners. A standard
-  simplex can be projected to two dimensions via a skew
-  orthogonal projection, where all the vertices of the
-  simplex are shown on a circle connected by edges. The
-  individual alpha coefficients can be then projected into
-  this circle.
+The stochastic nature of the alpha coefficients implies
+that they exist on a standard (K-1)-simplex with the K
+archetypes Z as the corners, and the coefficients as the
+coordinate with respect to these corners. A standard
+simplex can be projected to two dimensions via a skew
+orthogonal projection, where all the vertices of the
+simplex are shown on a circle connected by edges. The
+individual alpha coefficients can be then projected into
+this circle.
 }
 \examples{
 ### This example reproduces parts of the Figure 7 shown in
@@ -84,7 +82,7 @@
     direction_length = 2, directions_col = "black")
 }
 \references{
-  See Section 6 in "Probabilistic Archetypal Analysis" by
-  Seth and Eugster (2014), http://arxiv.org/abs/1312.7604.
+See Section 6 in "Probabilistic Archetypal Analysis" by
+Seth and Eugster (2014), http://arxiv.org/abs/1312.7604.
 }
 

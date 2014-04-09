@@ -2,10 +2,9 @@
 \alias{archmap}
 \title{Archetypal maps}
 \usage{
-  archmap(object, projection = simplex_projection,
-    projection_args = list(), rotate = 0, cex = 1.5,
-    col = 1, pch = 1, xlab = "", ylab = "", axes = FALSE,
-    asp = TRUE, ...)
+archmap(object, projection = simplex_projection, projection_args = list(),
+  rotate = 0, cex = 1.5, col = 1, pch = 1, xlab = "", ylab = "",
+  axes = FALSE, asp = TRUE, ...)
 }
 \arguments{
   \item{object}{An \code{\link{archetypes}} object}
@@ -36,12 +35,12 @@
   function}
 }
 \value{
-  Invisible matrix with the projected archetypes
+Invisible matrix with the projected archetypes
 }
 \description{
-  Two-dimensional projection of the observations based on
-  the alpha coefficients into a space spanned by the
-  (projected) archetypes.
+Two-dimensional projection of the observations based on the
+alpha coefficients into a space spanned by the (projected)
+archetypes.
 }
 \examples{
 \dontrun{
@@ -68,8 +67,9 @@
 }
 }
 \seealso{
-  Other archmap: \code{\link{atypes_projection}},
-  \code{\link{simplex_projection}},
-  \code{\link{tspsimplex_projection}}
+Other archmap: \code{\link{archmap_projections}},
+\code{\link{atypes_projection}},
+\code{\link{simplex_projection}},
+\code{\link{tspsimplex_projection}}
 }
 
