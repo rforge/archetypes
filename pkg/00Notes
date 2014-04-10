@@ -1,0 +1,4 @@
+
+- Remember to build the packge for CRAN as follows:
+  R CMD BUILD --compact-vignettes=gs+qpdf pkg
+  R CMD CHECK --as-cran archetypes_2.2-0.tar.gz 
